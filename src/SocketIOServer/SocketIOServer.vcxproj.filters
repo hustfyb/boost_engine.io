@@ -13,24 +13,44 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="httpServer">
+      <UniqueIdentifier>{bd273097-01fa-4b52-8c06-97ec49d295a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="util">
+      <UniqueIdentifier>{49655a24-6467-4d77-8175-14fd6ef226d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
+    <ClInclude Include="header.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="Server.hpp">
+      <Filter>httpServer</Filter>
+    </ClInclude>
+    <ClInclude Include="log.h">
+      <Filter>util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="SocketIOServer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>httpServer</Filter>
+    </ClCompile>
+    <ClCompile Include="header.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="log.c">
+      <Filter>util</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="log.conf">
+      <Filter>util</Filter>
+    </None>
   </ItemGroup>
 </Project>
