@@ -1,6 +1,6 @@
 #include "header.hpp"
 #include "server.hpp"
-#include "log.h"
+#include "DLog.h"
 //#include "request.hpp"
 //#include "Response.hpp"
 
@@ -10,16 +10,16 @@ namespace httpServer {
 		const std::string& address, const std::string& port):
 		ios(io_service)
 	{
-		init_log();
 		tcp::resolver resolver(io_service);
 		tcp::resolver::query query(address, port);
 		m_acceptor=make_shared<tcp::acceptor>(io_service, *resolver.resolve(query));
+		logf << "listen on " << address << ":" << port << "\r\n";
 	}
 
 
 	void Server::startListen()
 	{
-		fini_log();
+		step(system::error_code(), 0);
 	}
 
 	// Enable the pseudo-keywords reenter, yield and fork.
@@ -43,7 +43,7 @@ namespace httpServer {
 					// The parent continues looping to accept the next incoming connection.
 					// The child exits the loop and processes the connection.
 				} while (is_parent());
-
+				logf << "accetClient from " << (*m_clientSocket).remote_endpoint();
 /*				// Create the objects needed to receive a request on the connection.
 				buffer_.reset(new boost::array<char, 8192>);
 				request_.reset(new Request);
@@ -85,6 +85,8 @@ namespace httpServer {
 
 				*/
 			}
+		}else{
+			logf << "err:" << ec.message() << "\r\n";
 		}
 		// If an error occurs then the coroutine is not reentered. Consequently, no
 		// new asynchronous operations are started. This means that all shared_ptr

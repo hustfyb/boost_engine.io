@@ -28,7 +28,7 @@
 #include <map>
 #include <vector>
 
-#define logf std::cout<<__FUNCTION__<<":"
+#define logf std::cout<<__FUNCTION__<<"["<<__LINE__<<"]:"
 using namespace boost;
 
 

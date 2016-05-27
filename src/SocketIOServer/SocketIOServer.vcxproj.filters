@@ -30,9 +30,6 @@
     <ClInclude Include="Server.hpp">
       <Filter>httpServer</Filter>
     </ClInclude>
-    <ClInclude Include="log.h">
-      <Filter>util</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SocketIOServer.cpp">
@@ -44,13 +41,5 @@
     <ClCompile Include="header.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="log.c">
-      <Filter>util</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="log.conf">
-      <Filter>util</Filter>
-    </None>
   </ItemGroup>
 </Project>
