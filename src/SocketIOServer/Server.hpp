@@ -11,13 +11,14 @@
 #pragma once
 
 #include "header.hpp"
+#include "ClientHandler.h"
 //#include "request_parser.hpp"
 
 namespace httpServer {
 
 //	struct Request;
 //	class Response;
-	class Server : boost::asio::coroutine
+	class Server:asio::coroutine
 	{
 	public:
 		/// Construct the server to listen on the specified TCP address and port, and
@@ -29,8 +30,10 @@ namespace httpServer {
 // 			boost::system::error_code ec = boost::system::error_code(),
 // 			std::size_t length = 0);
 
-		void startListen();
+		void startListen(system::error_code ec);
 	private:
+		shared_ptr<ClientHandler> m_clientHandler;
+
 		void step(system::error_code ec, std::size_t length);
 
 		typedef boost::asio::ip::tcp tcp;
@@ -38,6 +41,8 @@ namespace httpServer {
 // 		boost::function<void(const Request&, Response &)>  file_handler_;
 // 		boost::function<bool(shared_ptr<Request>, shared_ptr<Response>)> request_handler_;
 
+// 		asio::coroutine  accepterCo;
+// 		asio::coroutine  clientHandlerCo;
 		asio::io_service &ios;
 		/// Acceptor used to listen for incoming connections.
 		boost::shared_ptr<tcp::acceptor> m_acceptor;

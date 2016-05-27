@@ -30,6 +30,9 @@
     <ClInclude Include="Server.hpp">
       <Filter>httpServer</Filter>
     </ClInclude>
+    <ClInclude Include="ClientHandler.h">
+      <Filter>httpServer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SocketIOServer.cpp">
@@ -40,6 +43,9 @@
     </ClCompile>
     <ClCompile Include="header.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientHandler.cpp">
+      <Filter>httpServer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

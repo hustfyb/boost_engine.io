@@ -28,7 +28,9 @@
 #include <map>
 #include <vector>
 
-#define logf std::cout<<__FUNCTION__<<"["<<__LINE__<<"]:"
+#define logf std::cout<<__FUNCTION__<<":"
 using namespace boost;
+
+typedef boost::asio::ip::tcp tcp;
 
 
