@@ -31,4 +31,6 @@
 #define logf std::cout<<__FUNCTION__<<":"
 using namespace boost;
 
+typedef boost::asio::ip::tcp tcp;
+
 

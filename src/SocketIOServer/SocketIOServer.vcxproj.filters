@@ -30,8 +30,8 @@
     <ClInclude Include="Server.hpp">
       <Filter>httpServer</Filter>
     </ClInclude>
-    <ClInclude Include="log.h">
-      <Filter>util</Filter>
+    <ClInclude Include="ClientHandler.h">
+      <Filter>httpServer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -44,13 +44,8 @@
     <ClCompile Include="header.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="log.c">
-      <Filter>util</Filter>
+    <ClCompile Include="ClientHandler.cpp">
+      <Filter>httpServer</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="log.conf">
-      <Filter>util</Filter>
-    </None>
   </ItemGroup>
 </Project>
