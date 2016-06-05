@@ -29,6 +29,7 @@ namespace httpServer {
 				settings.on_url = onCb;
 				yield m_socket.async_read_some(boost::asio::buffer(*buffer_), bind(&ClientHandler::run, shared_from_this(), _1, _2));
 				http_parser_execute(parser.get(), &settings, buffer_->data(), length);
+				std::cout << parser->state << "\r\n";
 			}
 
 			parser.reset();

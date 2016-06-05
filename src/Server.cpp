@@ -11,7 +11,14 @@ namespace httpServer {
 	{
 		tcp::resolver resolver(io_service);
 		tcp::resolver::query query(address, port);
-		m_acceptor=make_shared<tcp::acceptor>(io_service, *resolver.resolve(query));
+		try
+		{
+			m_acceptor = make_shared<tcp::acceptor>(io_service, *resolver.resolve(query));
+		}
+		catch (system::system_error &e)
+		{
+			logf << e.what()<< "\r\n";
+		}
 	}
 
 	// Enable the pseudo-keywords reenter, yield and fork.
