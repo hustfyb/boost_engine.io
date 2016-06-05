@@ -19,6 +19,9 @@
     <Filter Include="util">
       <UniqueIdentifier>{49655a24-6467-4d77-8175-14fd6ef226d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="util\http-parser">
+      <UniqueIdentifier>{9efcbe8e-6748-4401-ad51-0c95dcafd8be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -33,6 +36,9 @@
     <ClInclude Include="ClientHandler.h">
       <Filter>httpServer</Filter>
     </ClInclude>
+    <ClInclude Include="..\submodules\http-parser\http_parser.h">
+      <Filter>util\http-parser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SocketIOServer.cpp">
@@ -46,6 +52,9 @@
     </ClCompile>
     <ClCompile Include="ClientHandler.cpp">
       <Filter>httpServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\submodules\http-parser\http_parser.c">
+      <Filter>util\http-parser</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
