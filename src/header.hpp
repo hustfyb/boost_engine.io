@@ -22,6 +22,7 @@
 #include <boost/assign.hpp>
 #include <boost/foreach.hpp> 
 #include <boost/io/ios_state.hpp>
+#include <boost/enable_shared_from_this.hpp>
 #define foreach BOOST_FOREACH
 #include <string>
 #include <iostream>
