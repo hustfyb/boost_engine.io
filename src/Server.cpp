@@ -35,10 +35,6 @@ namespace httpServer {
 		else {
 			logf << "error:"<<ec.message()<<"\r\n";
 		}
-		// If an error occurs then the coroutine is not reentered. Consequently, no
-		// new asynchronous operations are started. This means that all shared_ptr
-		// references will disappear and the resources associated with the coroutine
-		// will be destroyed automatically after this function call returns.
 	}
 
 	void Server::step(system::error_code ec, std::size_t length)
