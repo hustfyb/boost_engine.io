@@ -1,6 +1,8 @@
 #pragma once
 #include "header.hpp"
+#include "Request.h"
 #include "../submodules/http-parser/http_parser.h"
+
 namespace httpServer {
 	class ClientHandler:asio::coroutine,
 		public enable_shared_from_this<ClientHandler>
@@ -15,7 +17,7 @@ namespace httpServer {
 		typedef array<char, 8192> ArrayBuffer;
 		shared_ptr<ArrayBuffer> buffer_;
 		shared_ptr<http_parser> parser;
-		http_parser_settings    settings;
+		Request			 request;
 	};
 }
 

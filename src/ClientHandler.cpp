@@ -21,17 +21,21 @@ namespace httpServer {
 	void ClientHandler::run(system::error_code ec, std::size_t length)
 	{
 //		request_.reset(new Request);
+		tribool parseResult = false;
 		reenter(this) {
 			if (!ec) {
 				parser.reset(new http_parser);
 				buffer_.reset(new ArrayBuffer);
-				http_parser_init(parser.get(), HTTP_REQUEST);
-				settings.on_url = onCb;
-				yield m_socket.async_read_some(boost::asio::buffer(*buffer_), bind(&ClientHandler::run, shared_from_this(), _1, _2));
-				http_parser_execute(parser.get(), &settings, buffer_->data(), length);
-				std::cout << parser->state << "\r\n";
-			}
+				do{
+					yield m_socket.async_read_some(boost::asio::buffer(*buffer_), bind(&ClientHandler::run, shared_from_this(), _1, _2));
+					//std::cout << parser->state << "\r\n";
+					parseResult = request.parse(buffer_->data(),length);
+				} while (indeterminate(parseResult));
+				if (parseResult == true) {
 
+				}
+			}
+			m_socket.shutdown(tcp::socket::shutdown_both, ec);
 			parser.reset();
 		}
 
