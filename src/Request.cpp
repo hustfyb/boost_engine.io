@@ -1,10 +1,11 @@
 #include "header.hpp"
-#include "Request.h"
+#include "Request.hpp"
 using namespace std;
 
 
 Request::Request()
 {
+	m_state = http_begin;
 	http_parser_init(&m_parse,HTTP_REQUEST);
 	m_parse.data = this;
 
@@ -25,8 +26,14 @@ Request::~Request()
 
 tribool Request::parse(char *data,std::size_t dSize)
 {
-	http_parser_execute(&m_parse, &m_httpSetting, data, dSize);
-	return true;
+	size_t rt=http_parser_execute(&m_parse, &m_httpSetting, data, dSize);
+	if (rt == 0) {
+		return false;
+	};
+	if (m_state == http_done) {
+		return true;
+	}	
+	return indeterminate;
 }
 
 int Request::on_url(http_parser* parse, const char *at, size_t length)
@@ -78,9 +85,10 @@ int Request::on_message_complete(http_parser*)
 	return 0;
 }
 
-int Request::on_message_begin(http_parser*)
+int Request::on_message_begin(http_parser*parse)
 {
-	logf << "\r\n";
+	Request *request = (Request*)parse->data;
+	request->m_state = http_done;
 	return 0;
 }
 

@@ -6,8 +6,9 @@
 namespace httpServer {
 
 	Server::Server(boost::asio::io_service& io_service,
-		const std::string& address, const std::string& port):
-		ios(io_service)
+		const std::string& address, const std::string& port,
+		const std::string& docRoot):
+		ios(io_service),m_docRoot(docRoot)
 	{
 		tcp::resolver resolver(io_service);
 		tcp::resolver::query query(address, port);

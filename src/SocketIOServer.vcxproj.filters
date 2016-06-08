@@ -39,7 +39,10 @@
     <ClInclude Include="..\submodules\http-parser\http_parser.h">
       <Filter>util\http-parser</Filter>
     </ClInclude>
-    <ClInclude Include="Request.h">
+    <ClInclude Include="Response.hpp">
+      <Filter>httpServer</Filter>
+    </ClInclude>
+    <ClInclude Include="Request.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -61,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="Request.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Response.cpp">
+      <Filter>httpServer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

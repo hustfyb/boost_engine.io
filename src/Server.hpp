@@ -24,7 +24,7 @@ namespace httpServer {
 		/// Construct the server to listen on the specified TCP address and port, and
 		/// serve up files from the given directory.
 		explicit Server(boost::asio::io_service& io_service,
-			const std::string& address, const std::string& port);
+			const std::string& address, const std::string& port,const std::string&);
 // 		/// Perform work associated with the server.
 // 		void operator()(
 // 			boost::system::error_code ec = boost::system::error_code(),
@@ -36,13 +36,11 @@ namespace httpServer {
 
 		void step(system::error_code ec, std::size_t length);
 
-		typedef boost::asio::ip::tcp tcp;
+		std::string m_docRoot;
 
 // 		boost::function<void(const Request&, Response &)>  file_handler_;
 // 		boost::function<bool(shared_ptr<Request>, shared_ptr<Response>)> request_handler_;
 
-// 		asio::coroutine  accepterCo;
-// 		asio::coroutine  clientHandlerCo;
 		asio::io_service &ios;
 		/// Acceptor used to listen for incoming connections.
 		boost::shared_ptr<tcp::acceptor> m_acceptor;

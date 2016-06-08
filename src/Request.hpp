@@ -9,11 +9,14 @@ public:
 	tribool parse(char *,std::size_t);
 	std::string url;
 	std::map<std::string, std::string> header;
+	typedef enum {
+		http_begin,
+		http_done
+	}State;
 private:
 	http_parser m_parse;
 	http_parser_settings m_httpSetting;
 
-	std::string m_head;
 public:
 	static int on_message_begin(http_parser*);
 	static int on_url(http_parser*, const char *at, size_t length);
@@ -25,5 +28,8 @@ public:
 	static int on_message_complete(http_parser*);
 // 	static int on_chunk_header(http_parser*);
 // 	static int on_chunk_complete(http_parser*);
+
+	State m_state;
+	std::string m_head;
 };
 

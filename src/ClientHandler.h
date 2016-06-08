@@ -1,6 +1,7 @@
 #pragma once
 #include "header.hpp"
-#include "Request.h"
+#include "Request.hpp"
+#include "Response.hpp"
 #include "../submodules/http-parser/http_parser.h"
 
 namespace httpServer {
@@ -17,7 +18,11 @@ namespace httpServer {
 		typedef array<char, 8192> ArrayBuffer;
 		shared_ptr<ArrayBuffer> buffer_;
 		shared_ptr<http_parser> parser;
-		Request			 request;
+		Request			request;
+		Response		response;
+
+		function<void(const Request&, Response &)>  file_handler_;
+
 	};
 }
 

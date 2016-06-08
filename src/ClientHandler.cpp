@@ -4,7 +4,8 @@
 namespace httpServer {
 
 	ClientHandler::ClientHandler(asio::io_service& io_service)
-		:ios(io_service),m_socket(io_service)
+		:ios(io_service),m_socket(io_service),
+		response(m_socket)
 	{
 	}
 
@@ -32,10 +33,12 @@ namespace httpServer {
 					parseResult = request.parse(buffer_->data(),length);
 				} while (indeterminate(parseResult));
 				if (parseResult == true) {
-
+					file_handler_(request, response);
 				}
 			}
-			m_socket.shutdown(tcp::socket::shutdown_both, ec);
+			else {
+				m_socket.shutdown(tcp::socket::shutdown_both, ec);
+			}
 			parser.reset();
 		}
 
