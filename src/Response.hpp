@@ -62,14 +62,16 @@ public:
 	/// not be changed until the write operation has completed.
 	std::vector<boost::asio::const_buffer> to_buffers();
 
-	void send(status_type status);
+	void send(status_type status,function<void(system::error_code, std::size_t)> cd);
 	void sendData(boost::system::error_code ec = boost::system::error_code(),
 		std::size_t length = 0);
 	void sendHead(boost::function<void(boost::system::error_code, std::size_t)> cb);
 	void sendDataContinue(char *data, int dataSize, function<void(system::error_code, std::size_t)> cb);
 	void stock_reply(status_type status);
+	void sendFile(std::string &docRoot, std::string &url, function<void(system::error_code, std::size_t)> cd);
 private:
 	char buff[4096];
 	/// ¶Ô¶ËµÄsocket;
 	asio::ip::tcp::socket &socket_;
+	bool url_decode(const std::string& in, std::string& out);
 };

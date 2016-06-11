@@ -45,6 +45,12 @@
     <ClInclude Include="Request.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="file_handler.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="mime_types.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SocketIOServer.cpp">
@@ -67,6 +73,12 @@
     </ClCompile>
     <ClCompile Include="Response.cpp">
       <Filter>httpServer</Filter>
+    </ClCompile>
+    <ClCompile Include="file_handler.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="mime_types.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

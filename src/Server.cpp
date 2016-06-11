@@ -34,7 +34,7 @@ namespace httpServer {
 				do
 				{
 					// Create a new socket for the next incoming connection.
-					m_clientHandler = make_shared<ClientHandler>(ios);
+					m_clientHandler = boost::make_shared<ClientHandler>(ios,m_docRoot);
 					yield m_acceptor->async_accept(m_clientHandler->m_socket, bind(&Server::startListen, this, _1));
 					m_clientHandler->run(system::error_code(),0);
 				} while (1);

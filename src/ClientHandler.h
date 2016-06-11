@@ -2,14 +2,14 @@
 #include "header.hpp"
 #include "Request.hpp"
 #include "Response.hpp"
+#include "file_handler.hpp"
 #include "../submodules/http-parser/http_parser.h"
 
-namespace httpServer {
 	class ClientHandler:asio::coroutine,
 		public enable_shared_from_this<ClientHandler>
 	{
 	public:
-		explicit ClientHandler(asio::io_service& io_service);
+		explicit ClientHandler(asio::io_service& io_service,std::string &docRoot);
 		~ClientHandler();
 		void run(system::error_code ec, std::size_t length);
 		tcp::socket m_socket;
@@ -20,9 +20,7 @@ namespace httpServer {
 		shared_ptr<http_parser> parser;
 		Request			request;
 		Response		response;
-
-		function<void(const Request&, Response &)>  file_handler_;
-
+		std::string m_docRoot;
+		file_handler  file_handler_;
 	};
-}
 

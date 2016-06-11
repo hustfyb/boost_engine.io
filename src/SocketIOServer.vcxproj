@@ -149,7 +149,9 @@
   <ItemGroup>
     <ClInclude Include="..\submodules\http-parser\http_parser.h" />
     <ClInclude Include="ClientHandler.h" />
+    <ClInclude Include="file_handler.hpp" />
     <ClInclude Include="header.hpp" />
+    <ClInclude Include="mime_types.hpp" />
     <ClInclude Include="Request.hpp" />
     <ClInclude Include="Response.hpp" />
     <ClInclude Include="Server.hpp" />
@@ -159,10 +161,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="ClientHandler.cpp" />
+    <ClCompile Include="file_handler.cpp" />
     <ClCompile Include="header.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">header.hpp</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="mime_types.cpp" />
     <ClCompile Include="Request.cpp" />
     <ClCompile Include="Response.cpp" />
     <ClCompile Include="Server.cpp">
