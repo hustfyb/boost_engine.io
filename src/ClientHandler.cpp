@@ -1,6 +1,6 @@
 #include "header.hpp"
 #include "ClientHandler.h"
-
+#include "SocketIo.hpp"
 
 ClientHandler::ClientHandler(asio::io_service& io_service, std::string &docRoot)
 	:ios(io_service), m_socket(io_service), m_docRoot(docRoot),
@@ -32,7 +32,14 @@ void ClientHandler::run(system::error_code ec, std::size_t length)
 				parseResult = request.parse(buffer_->data(), length);
 			} while (indeterminate(parseResult));
 			if (parseResult == true) {
-				yield response.sendFile(m_docRoot,request.url,bind(&ClientHandler::run, shared_from_this(), _1, _2));
+				//socket.io Test
+				if (SocketIo::match(request.url)) {
+					yield SocketIo::handle_handshake(request, response, bind(&ClientHandler::run, shared_from_this(), _1, _2));
+				}
+				else {
+					yield	response.sendFile(m_docRoot, request.url, bind(&ClientHandler::run, shared_from_this(), _1, _2));
+				}
+
 			}
 			m_socket.shutdown(tcp::socket::shutdown_both, ec);
 		}

@@ -63,12 +63,11 @@ public:
 	std::vector<boost::asio::const_buffer> to_buffers();
 
 	void send(status_type status,function<void(system::error_code, std::size_t)> cd);
-	void sendData(boost::system::error_code ec = boost::system::error_code(),
-		std::size_t length = 0);
+	void sendData(std::string &data, function<void(system::error_code, std::size_t)> cb)
 	void sendHead(boost::function<void(boost::system::error_code, std::size_t)> cb);
 	void sendDataContinue(char *data, int dataSize, function<void(system::error_code, std::size_t)> cb);
 	void stock_reply(status_type status);
-	void sendFile(std::string &docRoot, std::string &url, function<void(system::error_code, std::size_t)> cd);
+	void sendFile(std::string &docRoot, std::string &url, function<void(system::error_code, std::size_t)> cb);
 private:
 	char buff[4096];
 	/// ¶Ô¶ËµÄsocket;

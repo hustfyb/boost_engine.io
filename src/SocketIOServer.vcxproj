@@ -155,6 +155,8 @@
     <ClInclude Include="Request.hpp" />
     <ClInclude Include="Response.hpp" />
     <ClInclude Include="Server.hpp" />
+    <ClInclude Include="SocketIo.hpp" />
+    <ClInclude Include="uuid_t.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\submodules\http-parser\http_parser.c">
@@ -172,10 +174,12 @@
     <ClCompile Include="Server.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">header.hpp</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="SocketIo.cpp" />
     <ClCompile Include="SocketIOServer.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">header.hpp</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="uuid_t.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

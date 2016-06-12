@@ -16,37 +16,37 @@
 namespace status_strings {
 
 	const std::string ok =
-		"HTTP/1.0 200 OK\r\n";
+		"HTTP/1.1 200 OK\r\n";
 	const std::string created =
-		"HTTP/1.0 201 Created\r\n";
+		"HTTP/1.1 201 Created\r\n";
 	const std::string accepted =
-		"HTTP/1.0 202 Accepted\r\n";
+		"HTTP/1.1 202 Accepted\r\n";
 	const std::string no_content =
-		"HTTP/1.0 204 No Content\r\n";
+		"HTTP/1.1 204 No Content\r\n";
 	const std::string multiple_choices =
-		"HTTP/1.0 300 Multiple Choices\r\n";
+		"HTTP/1.1 300 Multiple Choices\r\n";
 	const std::string moved_permanently =
-		"HTTP/1.0 301 Moved Permanently\r\n";
+		"HTTP/1.1 301 Moved Permanently\r\n";
 	const std::string moved_temporarily =
-		"HTTP/1.0 302 Moved Temporarily\r\n";
+		"HTTP/1.1 302 Moved Temporarily\r\n";
 	const std::string not_modified =
-		"HTTP/1.0 304 Not Modified\r\n";
+		"HTTP/1.1 304 Not Modified\r\n";
 	const std::string bad_request =
-		"HTTP/1.0 400 Bad Request\r\n";
+		"HTTP/1.1 400 Bad Request\r\n";
 	const std::string unauthorized =
-		"HTTP/1.0 401 Unauthorized\r\n";
+		"HTTP/1.1 401 Unauthorized\r\n";
 	const std::string forbidden =
-		"HTTP/1.0 403 Forbidden\r\n";
+		"HTTP/1.1 403 Forbidden\r\n";
 	const std::string not_found =
-		"HTTP/1.0 404 Not Found\r\n";
+		"HTTP/1.1 404 Not Found\r\n";
 	const std::string internal_server_error =
-		"HTTP/1.0 500 Internal Server Error\r\n";
+		"HTTP/1.1 500 Internal Server Error\r\n";
 	const std::string not_implemented =
-		"HTTP/1.0 501 Not Implemented\r\n";
+		"HTTP/1.1 501 Not Implemented\r\n";
 	const std::string bad_gateway =
-		"HTTP/1.0 502 Bad Gateway\r\n";
+		"HTTP/1.1 502 Bad Gateway\r\n";
 	const std::string service_unavailable =
-		"HTTP/1.0 503 Service Unavailable\r\n";
+		"HTTP/1.1 503 Service Unavailable\r\n";
 
 	boost::asio::const_buffer to_buffer(Response::status_type status)
 	{
@@ -238,7 +238,7 @@ namespace stock_replies {
 
 void Response::stock_reply(Response::status_type status)
 {
-	status = status;
+	this->status = status;
 	content = stock_replies::to_string(status);
 	headers.resize(2);
 	headers[0].name = "Content-Length";
@@ -254,21 +254,17 @@ void Response::send(status_type status, function<void(system::error_code, std::s
 	asio::async_write(socket_, this->to_buffers(), cb);
 }
 
-#include <boost/asio/yield.hpp>
-void Response::sendData(boost::system::error_code ec, std::size_t length)
+void Response::sendData(std::string &data,function<void(system::error_code, std::size_t)> cb)
 {
-	if (!ec) {
-		reenter(this)
-		{
-			//Send the reply back to the client.
-			//				yield boost::asio::async_write(*socket_, this->to_buffers(),  boost::bind(&Response::sendData,shared_from_this(),_1,_2));
-
-			//Initiate graceful connection closure.
-			socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
-		}
-	}
+	content = data;
+	headers.resize(2);
+	headers[0].name = "Content-Length";
+	headers[0].value = boost::lexical_cast<std::string>(content.size());
+	headers[1].name = "Content-Type";
+	headers[1].value = "text/plain";
+	asio::async_write(socket_, this->to_buffers(), cb);
 }
-#include <boost/asio/unyield.hpp>
+
 void Response::sendHead(boost::function<void(boost::system::error_code, std::size_t)> cb)
 {
 	socket_.async_send(this->to_buffers(), cb);
