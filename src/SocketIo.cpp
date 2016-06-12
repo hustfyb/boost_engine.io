@@ -14,10 +14,10 @@ namespace SocketIo {
 
 	void handle_handshake(Request request, Response response, function<void(system::error_code, std::size_t)> cb)
 	{
-		char uuidBuff[36];
+//		char uuidBuff[36];
 
-		shared_ptr<session_t> session =make_shared<session_t>();
-		session->sessionid =make_shared<uuid_t()>();
+//		shared_ptr<session_t> session =make_shared<session_t>();
+//		session->sessionid =make_shared<uuid_t()>();
 // 		session->queue = NULL;
 // 		session->client = NULL;
 // 		session->endpoint = NULL;
@@ -32,8 +32,8 @@ namespace SocketIo {
 
 //		char body_msg[120];
 		
-		format fmt("%s:%d:%d:%s");
-		fmt % session->sessionid % global_config->heartbeat_timeout % global_config->close_timeout % global_config->transports;
+//		format fmt("%s:%d:%d:%s");
+//		fmt % session->sessionid % global_config->heartbeat_timeout % global_config->close_timeout % global_config->transports;
 //		sprintf(body_msg, "%s:%d:%d:%s",
 // 		char http_msg[strlen(body_msg) + 200];
 // 		sprintf(http_msg, RESPONSE_PLAIN, (int)strlen(body_msg), body_msg);

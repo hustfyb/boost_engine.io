@@ -4,7 +4,7 @@
 
 ClientHandler::ClientHandler(asio::io_service& io_service, std::string &docRoot)
 	:ios(io_service), m_socket(io_service), m_docRoot(docRoot),
-	response(m_socket), file_handler_(docRoot)
+	response(m_socket)
 {
 }
 

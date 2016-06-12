@@ -63,7 +63,7 @@ public:
 	std::vector<boost::asio::const_buffer> to_buffers();
 
 	void send(status_type status,function<void(system::error_code, std::size_t)> cd);
-	void sendData(std::string &data, function<void(system::error_code, std::size_t)> cb)
+	void sendData(std::string &data, function<void(system::error_code, std::size_t)> cb);
 	void sendHead(boost::function<void(boost::system::error_code, std::size_t)> cb);
 	void sendDataContinue(char *data, int dataSize, function<void(system::error_code, std::size_t)> cb);
 	void stock_reply(status_type status);

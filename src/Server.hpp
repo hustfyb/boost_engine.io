@@ -12,9 +12,11 @@
 
 #include "header.hpp"
 #include "ClientHandler.h"
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+
 //#include "request_parser.hpp"
 
-namespace httpServer {
 
 //	struct Request;
 //	class Response;
@@ -23,8 +25,7 @@ namespace httpServer {
 	public:
 		/// Construct the server to listen on the specified TCP address and port, and
 		/// serve up files from the given directory.
-		explicit Server(boost::asio::io_service& io_service,
-			const std::string& address, const std::string& port,const std::string&);
+		explicit Server(boost::asio::io_service& io_service,const std::string&);
 // 		/// Perform work associated with the server.
 // 		void operator()(
 // 			boost::system::error_code ec = boost::system::error_code(),
@@ -36,7 +37,7 @@ namespace httpServer {
 
 		void step(system::error_code ec, std::size_t length);
 
-		std::string m_docRoot;
+		property_tree::ptree m_config;
 
 // 		boost::function<void(const Request&, Response &)>  file_handler_;
 // 		boost::function<bool(shared_ptr<Request>, shared_ptr<Response>)> request_handler_;
@@ -65,4 +66,3 @@ namespace httpServer {
 
 	};
 
-} // namespace httpServer

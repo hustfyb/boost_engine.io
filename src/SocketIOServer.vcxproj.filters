@@ -31,9 +31,6 @@
     <ClInclude Include="Response.hpp">
       <Filter>httpServer</Filter>
     </ClInclude>
-    <ClInclude Include="file_handler.hpp">
-      <Filter>httpServer</Filter>
-    </ClInclude>
     <ClInclude Include="header.hpp" />
     <ClInclude Include="Request.hpp">
       <Filter>httpServer</Filter>
@@ -59,9 +56,6 @@
       <Filter>util\http-parser</Filter>
     </ClCompile>
     <ClCompile Include="Response.cpp">
-      <Filter>httpServer</Filter>
-    </ClCompile>
-    <ClCompile Include="file_handler.cpp">
       <Filter>httpServer</Filter>
     </ClCompile>
     <ClCompile Include="Request.cpp">

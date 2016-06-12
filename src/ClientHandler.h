@@ -2,7 +2,6 @@
 #include "header.hpp"
 #include "Request.hpp"
 #include "Response.hpp"
-#include "file_handler.hpp"
 #include "../submodules/http-parser/http_parser.h"
 
 	class ClientHandler:asio::coroutine,
@@ -21,6 +20,5 @@
 		Request			request;
 		Response		response;
 		std::string m_docRoot;
-		file_handler  file_handler_;
 	};
 
