@@ -154,6 +154,7 @@
     <ClInclude Include="Request.hpp" />
     <ClInclude Include="Response.hpp" />
     <ClInclude Include="Server.hpp" />
+    <ClInclude Include="Setting.hpp" />
     <ClInclude Include="SocketIo.hpp" />
     <ClInclude Include="uuid_t.hpp" />
   </ItemGroup>
@@ -172,6 +173,7 @@
     <ClCompile Include="Server.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">header.hpp</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="Setting.cpp" />
     <ClCompile Include="SocketIo.cpp" />
     <ClCompile Include="SocketIOServer.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>

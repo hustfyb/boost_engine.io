@@ -12,8 +12,6 @@
 
 #include "header.hpp"
 #include "ClientHandler.h"
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
 
 //#include "request_parser.hpp"
 
@@ -23,9 +21,7 @@
 	class Server:asio::coroutine
 	{
 	public:
-		/// Construct the server to listen on the specified TCP address and port, and
-		/// serve up files from the given directory.
-		explicit Server(boost::asio::io_service& io_service,const std::string&);
+		explicit Server(boost::asio::io_service& io_service);
 // 		/// Perform work associated with the server.
 // 		void operator()(
 // 			boost::system::error_code ec = boost::system::error_code(),
@@ -36,8 +32,6 @@
 		shared_ptr<ClientHandler> m_clientHandler;
 
 		void step(system::error_code ec, std::size_t length);
-
-		property_tree::ptree m_config;
 
 // 		boost::function<void(const Request&, Response &)>  file_handler_;
 // 		boost::function<bool(shared_ptr<Request>, shared_ptr<Response>)> request_handler_;

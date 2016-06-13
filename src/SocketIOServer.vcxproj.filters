@@ -44,6 +44,7 @@
     <ClInclude Include="uuid_t.hpp">
       <Filter>util</Filter>
     </ClInclude>
+    <ClInclude Include="Setting.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -72,5 +73,6 @@
     <ClCompile Include="uuid_t.cpp">
       <Filter>util</Filter>
     </ClCompile>
+    <ClCompile Include="Setting.cpp" />
   </ItemGroup>
 </Project>

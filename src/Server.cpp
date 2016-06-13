@@ -1,22 +1,13 @@
 #include "header.hpp"
 #include "server.hpp"
+#include "Setting.hpp"
 //#include "request.hpp"
 //#include "Response.hpp"
 
-	Server::Server(boost::asio::io_service& io_service,
-		const std::string& fileName): ios(io_service)
+	Server::Server(boost::asio::io_service& io_service): ios(io_service)
 	{
-		try
-		{
-			read_json(fileName, m_config);
-		}
-		catch (...)
-		{
-			logf << "config file error" << "\r\n";
-		}
-		std::string port = m_config.get("port", "123");
 		tcp::resolver resolver(io_service);
-		tcp::resolver::query query(m_config.get("address", "0.0.0.0"), m_config.get("port", "80"));
+		tcp::resolver::query query(g_setting.getAddress(), g_setting.getPort());
 		try
 		{
 			m_acceptor = make_shared<tcp::acceptor>(io_service, *resolver.resolve(query));
@@ -39,7 +30,7 @@
 				do
 				{
 					// Create a new socket for the next incoming connection.
-					m_clientHandler = boost::make_shared<ClientHandler>(ios,m_config.get("root","web"));
+					m_clientHandler = boost::make_shared<ClientHandler>(ios,g_setting.getRoot());
 					yield m_acceptor->async_accept(m_clientHandler->m_socket, bind(&Server::startListen, this, _1));
 					m_clientHandler->run(system::error_code(),0);
 				} while (1);
