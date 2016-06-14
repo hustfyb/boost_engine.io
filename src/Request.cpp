@@ -27,6 +27,7 @@ Request::~Request()
 tribool Request::parse(char *data,std::size_t dSize)
 {
 	size_t rt=http_parser_execute(&m_parse, &m_httpSetting, data, dSize);
+	logf << rt << "\r\n";
 	if (rt == 0) {
 		return false;
 	};
@@ -83,6 +84,11 @@ int Request::on_message_complete(http_parser*)
 {
 	logf << "\r\n";
 	return 0;
+}
+
+bool Request::upgrade()
+{
+	return m_parse.upgrade;
 }
 
 int Request::on_message_begin(http_parser*parse)

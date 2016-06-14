@@ -11,6 +11,9 @@ public:
 	std::string getAddress();
 	std::string getPort();
 	std::string getRoot();
+	int getHeartbeat_timeout();
+	int getClose_timeout();
+	std::string getTransports();
 private:
 	property_tree::ptree m_config;
 };

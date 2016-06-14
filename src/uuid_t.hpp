@@ -5,7 +5,7 @@
 using namespace boost;
 using namespace boost::uuids;
 class uuid_t :public uuid {
-private:
+public:
 	static random_generator rgen;
 	static string_generator sgen;
 	uuid_t() :uuid(rgen()) {}

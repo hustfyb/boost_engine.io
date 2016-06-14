@@ -256,7 +256,10 @@ void Response::send(status_type status, function<void(system::error_code, std::s
 
 void Response::sendData(std::string &data,function<void(system::error_code, std::size_t)> cb)
 {
+	status = Response::ok;
 	content = data;
+	content.clear();
+	content.append(data);
 	headers.resize(2);
 	headers[0].name = "Content-Length";
 	headers[0].value = boost::lexical_cast<std::string>(content.size());

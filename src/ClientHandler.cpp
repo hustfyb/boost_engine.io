@@ -11,7 +11,6 @@ ClientHandler::ClientHandler(asio::io_service& io_service, std::string &docRoot)
 
 ClientHandler::~ClientHandler()
 {
-	logf << "\r\n";
 }
 
 int onCb(http_parser*, const char *at, size_t length) {
@@ -22,33 +21,47 @@ void ClientHandler::run(system::error_code ec, std::size_t length)
 {
 	//		request_.reset(new Request);
 	tribool parseResult = false;
+	bool exit = false;
 	reenter(this) {
 		if (!ec) {
 			parser.reset(new http_parser);
 			buffer_.reset(new ArrayBuffer);
-			do {
-				yield m_socket.async_read_some(boost::asio::buffer(*buffer_), bind(&ClientHandler::run, shared_from_this(), _1, _2));
-				//std::cout << parser->state << "\r\n";
-				parseResult = request.parse(buffer_->data(), length);
-			} while (indeterminate(parseResult));
-			if (parseResult == true) {
-				//socket.io Test
-				if (SocketIo::match(request.url)) {
-					yield SocketIo::handle_handshake(request, response, bind(&ClientHandler::run, shared_from_this(), _1, _2));
-				}
-				else {
-					yield	response.sendFile(m_docRoot, request.url, bind(&ClientHandler::run, shared_from_this(), _1, _2));
-				}
+			while (!exit)
+			{
+				do {
+					yield m_socket.async_read_some(boost::asio::buffer(*buffer_), bind(&ClientHandler::run, shared_from_this(), _1, _2));
+					if (length == 0) {
+						exit = true;
+						break;
+					}
+					//std::cout << parser->state << "\r\n";
+					parseResult = request.parse(buffer_->data(), length);
+				} while (indeterminate(parseResult));
+				if (parseResult == true) {
+					//socket.io Test
+					if (request.upgrade()) {
+						logf << "upgrade\r\n";
+					}
+					else if (SocketIo::match(request.url)) {
+						yield SocketIo::handle_handshake(request, response, bind(&ClientHandler::run, shared_from_this(), _1, _2));
+						//yield response.send(Response::bad_request, bind(&ClientHandler::run, shared_from_this(), _1, _2));
+						//yield	response.send(m_docRoot, request.url, bind(&ClientHandler::run, shared_from_this(), _1, _2));
+					}
+					else {
+						yield	response.sendFile(m_docRoot, request.url, bind(&ClientHandler::run, shared_from_this(), _1, _2));
+					}
 
+				}
 			}
-			m_socket.shutdown(tcp::socket::shutdown_both, ec);
+			//m_socket.shutdown(tcp::socket::shutdown_both, ec);
 		}
 		else {
-			m_socket.shutdown(tcp::socket::shutdown_both, ec);
+			logf << ec;
 		}
+		m_socket.shutdown(tcp::socket::shutdown_both, ec);
+		logf << "client down\r\n";
 		parser.reset();
 	}
-
 	// 			do
 	// 			{
 	// 				buffer_.reset(new ArrayBuffer);

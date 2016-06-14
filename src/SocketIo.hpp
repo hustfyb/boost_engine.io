@@ -20,5 +20,5 @@ namespace SocketIo {
 	} session_t;
 
 	bool match(std::string &url);
-	void handle_handshake(Request request, Response response, function<void(system::error_code, std::size_t)> cb);
+	void handle_handshake(Request &request, Response &response, function<void(system::error_code, std::size_t)> cb);
 }

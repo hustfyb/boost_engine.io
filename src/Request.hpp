@@ -18,6 +18,7 @@ private:
 	http_parser_settings m_httpSetting;
 
 public:
+	bool upgrade();
 	static int on_message_begin(http_parser*);
 	static int on_url(http_parser*, const char *at, size_t length);
 	static int on_status(http_parser*, const char *at, size_t length);

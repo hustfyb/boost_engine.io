@@ -39,4 +39,22 @@ std::string Setting::getRoot()
 	return m_config.get("root", "web");
 }
 
+
+int Setting::getHeartbeat_timeout()
+{
+	return m_config.get("heartbeat_timeout", 60);
+}
+
+
+int Setting::getClose_timeout()
+{
+	return m_config.get("close_timeout", 60);
+}
+
+
+std::string Setting::getTransports()
+{
+	return m_config.get("transports", "websocket");
+}
+
 Setting g_setting;
