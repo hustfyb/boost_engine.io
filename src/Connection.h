@@ -4,12 +4,12 @@
 #include "Response.hpp"
 #include "../submodules/http-parser/http_parser.h"
 
-	class ClientHandler:asio::coroutine,
-		public enable_shared_from_this<ClientHandler>
+	class Connection:asio::coroutine,
+		public enable_shared_from_this<Connection>
 	{
 	public:
-		explicit ClientHandler(asio::io_service& io_service,std::string &docRoot);
-		~ClientHandler();
+		explicit Connection(asio::io_service& io_service,std::string &docRoot);
+		~Connection();
 		void run(system::error_code ec, std::size_t length);
 		tcp::socket m_socket;
 	private:

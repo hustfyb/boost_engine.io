@@ -148,21 +148,24 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\submodules\http-parser\http_parser.h" />
-    <ClInclude Include="ClientHandler.h" />
+    <ClInclude Include="Connection.h" />
     <ClInclude Include="header.hpp" />
     <ClInclude Include="mime_types.hpp" />
+    <ClInclude Include="ObjectFactory.h" />
     <ClInclude Include="Request.hpp" />
     <ClInclude Include="Response.hpp" />
     <ClInclude Include="Server.hpp" />
     <ClInclude Include="Setting.hpp" />
     <ClInclude Include="SocketIo.hpp" />
+    <ClInclude Include="TranserBase.h" />
     <ClInclude Include="uuid_t.hpp" />
+    <ClInclude Include="WebsocketTranser.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\submodules\http-parser\http_parser.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ClientHandler.cpp" />
+    <ClCompile Include="Connection.cpp" />
     <ClCompile Include="header.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">header.hpp</PrecompiledHeaderFile>
@@ -179,7 +182,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">header.hpp</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="TranserBase.cpp" />
     <ClCompile Include="uuid_t.cpp" />
+    <ClCompile Include="WebsocketTranser.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

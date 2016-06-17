@@ -1,18 +1,37 @@
 #pragma once
 #include "header.hpp"
 #include "../submodules/http-parser/http_parser.h"
+#include "uuid_t.hpp"
+enum SESSION_STATE {
+	DISCONNECTED_STATE = -2,
+	DISCONNECTING_STATE = -1,
+	CONNECTING_STATE = 0,
+	CONNECTED_STATE = 1
+};
+
+typedef struct {
+	std::string sessionid;
+	//	client_t *client;
+	//	GQueue *queue;
+	//	char *endpoint;
+	int state; /* -2:disconnected; -1:disconnecting; 0:connecting; 1:connected; */
+			   //	ev_timer close_timeout;
+} session_t;
+
 class Request
 {
 public:
+	typedef enum {
+		http_begin,
+		http_done
+	}State;
 	Request();
 	~Request();
 	tribool parse(char *,std::size_t);
 	std::string url;
 	std::map<std::string, std::string> header;
-	typedef enum {
-		http_begin,
-		http_done
-	}State;
+	std::string sessionid;
+	std::string transport;
 private:
 	http_parser m_parse;
 	http_parser_settings m_httpSetting;
@@ -32,5 +51,6 @@ public:
 
 	State m_state;
 	std::string m_head;
+	shared_ptr<session_t> session;
 };
 

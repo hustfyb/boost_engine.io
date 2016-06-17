@@ -14,15 +14,18 @@
     <Filter Include="util\http-parser">
       <UniqueIdentifier>{9efcbe8e-6748-4401-ad51-0c95dcafd8be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="transers">
+      <UniqueIdentifier>{46449cf6-4ea5-4660-8862-fb4f4ce8f323}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="util\objectFactory">
+      <UniqueIdentifier>{34a5fb3a-cae1-4f8a-a549-abc44132afbd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Server.hpp">
-      <Filter>httpServer</Filter>
-    </ClInclude>
-    <ClInclude Include="ClientHandler.h">
       <Filter>httpServer</Filter>
     </ClInclude>
     <ClInclude Include="..\submodules\http-parser\http_parser.h">
@@ -45,12 +48,21 @@
       <Filter>util</Filter>
     </ClInclude>
     <ClInclude Include="Setting.hpp" />
+    <ClInclude Include="Connection.h">
+      <Filter>httpServer</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectFactory.h">
+      <Filter>util\objectFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="TranserBase.h">
+      <Filter>transers</Filter>
+    </ClInclude>
+    <ClInclude Include="WebsocketTranser.h">
+      <Filter>transers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
-      <Filter>httpServer</Filter>
-    </ClCompile>
-    <ClCompile Include="ClientHandler.cpp">
       <Filter>httpServer</Filter>
     </ClCompile>
     <ClCompile Include="..\submodules\http-parser\http_parser.c">
@@ -74,5 +86,14 @@
       <Filter>util</Filter>
     </ClCompile>
     <ClCompile Include="Setting.cpp" />
+    <ClCompile Include="Connection.cpp">
+      <Filter>httpServer</Filter>
+    </ClCompile>
+    <ClCompile Include="TranserBase.cpp">
+      <Filter>transers</Filter>
+    </ClCompile>
+    <ClCompile Include="WebsocketTranser.cpp">
+      <Filter>transers</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

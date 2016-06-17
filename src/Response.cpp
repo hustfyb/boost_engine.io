@@ -364,6 +364,7 @@ void Response::sendFile(std::string &docRoot, std::string &url, function<void(sy
 
 	// Fill out the reply to be sent to the client.
 	this->status = Response::ok;
+	this->content.clear();
 	char buf[512];
 	while (is.read(buf, sizeof(buf)).gcount() > 0) {
 		this->content.append(buf, is.gcount());

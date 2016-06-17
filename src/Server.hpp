@@ -11,7 +11,7 @@
 #pragma once
 
 #include "header.hpp"
-#include "ClientHandler.h"
+#include "Connection.h"
 
 //#include "request_parser.hpp"
 
@@ -22,14 +22,10 @@
 	{
 	public:
 		explicit Server(boost::asio::io_service& io_service);
-// 		/// Perform work associated with the server.
-// 		void operator()(
-// 			boost::system::error_code ec = boost::system::error_code(),
-// 			std::size_t length = 0);
 
 		void startListen(system::error_code ec);
 	private:
-		shared_ptr<ClientHandler> m_clientHandler;
+		shared_ptr<Connection> m_connection;
 
 		void step(system::error_code ec, std::size_t length);
 

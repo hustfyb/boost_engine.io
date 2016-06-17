@@ -1,27 +1,30 @@
 #include "header.hpp"
-#include "ClientHandler.h"
+#include "Connection.h"
 #include "SocketIo.hpp"
 
-ClientHandler::ClientHandler(asio::io_service& io_service, std::string &docRoot)
+Connection::Connection(asio::io_service& io_service, std::string &docRoot)
 	:ios(io_service), m_socket(io_service), m_docRoot(docRoot),
 	response(m_socket)
 {
+	logf << "\r\n";
 }
 
 
-ClientHandler::~ClientHandler()
+Connection::~Connection()
 {
+	logf << "\r\n";
 }
 
 int onCb(http_parser*, const char *at, size_t length) {
 	return 0;
 };
 #include <boost/asio/yield.hpp>
-void ClientHandler::run(system::error_code ec, std::size_t length)
+void Connection::run(system::error_code ec, std::size_t length)
 {
 	//		request_.reset(new Request);
 	tribool parseResult = false;
 	bool exit = false;
+	bool bit = false;
 	reenter(this) {
 		if (!ec) {
 			parser.reset(new http_parser);
@@ -29,7 +32,7 @@ void ClientHandler::run(system::error_code ec, std::size_t length)
 			while (!exit)
 			{
 				do {
-					yield m_socket.async_read_some(boost::asio::buffer(*buffer_), bind(&ClientHandler::run, shared_from_this(), _1, _2));
+					yield m_socket.async_read_some(boost::asio::buffer(*buffer_), bind(&Connection::run, shared_from_this(), _1, _2));
 					if (length == 0) {
 						exit = true;
 						break;
@@ -39,18 +42,20 @@ void ClientHandler::run(system::error_code ec, std::size_t length)
 				} while (indeterminate(parseResult));
 				if (parseResult == true) {
 					//socket.io Test
-					if (request.upgrade()) {
-						logf << "upgrade\r\n";
-					}
-					else if (SocketIo::match(request.url)) {
-						yield SocketIo::handle_handshake(request, response, bind(&ClientHandler::run, shared_from_this(), _1, _2));
+// 					if (request.upgrade()) {
+// 						logf << "upgrade\r\n";
+// 					}
+// 					else{
+						bit =SocketIo::match(request, response,bind(&Connection::run, shared_from_this(), _1, _2));
+						if (!bit) {
+							yield response.sendFile(m_docRoot, request.url, bind(&Connection::run, shared_from_this(), _1, _2));
+						}
+						else {
+							yield;
+						}
 						//yield response.send(Response::bad_request, bind(&ClientHandler::run, shared_from_this(), _1, _2));
 						//yield	response.send(m_docRoot, request.url, bind(&ClientHandler::run, shared_from_this(), _1, _2));
-					}
-					else {
-						yield	response.sendFile(m_docRoot, request.url, bind(&ClientHandler::run, shared_from_this(), _1, _2));
-					}
-
+					//}
 				}
 			}
 			//m_socket.shutdown(tcp::socket::shutdown_both, ec);
