@@ -27,7 +27,7 @@
 			{
 				do
 				{
-					m_connection = boost::make_shared<Connection>(ios,g_setting.getRoot());
+					m_connection = boost::make_shared<Connection>(*this);
 					yield m_acceptor->async_accept(m_connection->m_socket, bind(&Server::startListen, this, _1));
 					m_connection->run(system::error_code(),0);
 				} while (1);

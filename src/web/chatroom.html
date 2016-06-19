@@ -5,14 +5,20 @@
 <title>Chat Demo</title>
 <link href="css/chat.css" rel="stylesheet">
 <script src="js/jquery-1.8.3.min.js"></script>
-<script src="socket.io/socket.io.js"></script>
+<!--<script src="socket.io/socket.io.js"></script>-->
+	<script src="js/engine.io.js"></script>
 <!-- <link href="http://192.168.190.150/css/chat.css" rel="stylesheet"> -->
+
 <!-- <script src="http://192.168.190.150/js/jquery-1.6.2.js"></script> -->
 <!-- <script src="http://192.168.190.150/js/socket.io.js"></script> -->
 <script>
 	$(function(){
 		$('#test').click(function(){
-			var socket = io.connect("/chatroom");
+			var socket = eio('ws://localhost');
+//			socket.on('open', function(){
+//				socket.on('message', function(data){});
+//				socket.on('close', function(){});
+//			});
 		});
 	});
 	// socket.io specific code

@@ -66,6 +66,8 @@ namespace SocketIo {
 	int handle_transport(Request &request, Response &response, function<void(system::error_code, std::size_t)> cb) {
 		std::vector<std::string> tt = TranserBase::getTransersName();
 		Transer *transer = TranserBase::CreateTranserByName(request.transport);
+		//if session no data
+		//transer->output
 		return 0;
 	}
 	void handleContinue(Request &request, Response &response, function<void(system::error_code, std::size_t)> cb) {

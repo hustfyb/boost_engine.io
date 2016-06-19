@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="..\submodules\http-parser\http_parser.h" />
     <ClInclude Include="Connection.h" />
+    <ClInclude Include="engineIo.hpp" />
     <ClInclude Include="header.hpp" />
     <ClInclude Include="mime_types.hpp" />
     <ClInclude Include="ObjectFactory.h" />
@@ -166,6 +167,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Connection.cpp" />
+    <ClCompile Include="engineIo.cpp" />
     <ClCompile Include="header.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">header.hpp</PrecompiledHeaderFile>

@@ -20,6 +20,9 @@
     <Filter Include="util\objectFactory">
       <UniqueIdentifier>{34a5fb3a-cae1-4f8a-a549-abc44132afbd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="filter">
+      <UniqueIdentifier>{3b602946-0eb2-48cc-99cc-d8d2ad1a9bc4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -60,6 +63,7 @@
     <ClInclude Include="WebsocketTranser.h">
       <Filter>transers</Filter>
     </ClInclude>
+    <ClInclude Include="engineIo.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -95,5 +99,6 @@
     <ClCompile Include="WebsocketTranser.cpp">
       <Filter>transers</Filter>
     </ClCompile>
+    <ClCompile Include="engineIo.cpp" />
   </ItemGroup>
 </Project>
