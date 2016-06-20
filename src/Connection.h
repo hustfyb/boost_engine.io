@@ -16,10 +16,8 @@ private:
 	asio::io_service &ios;
 	typedef array<char, 8192> ArrayBuffer;
 	shared_ptr<ArrayBuffer> buffer_;
-	shared_ptr<http_parser> parser;
 	Server			&server;
 	Request			request;
 	Response		response;
-	std::string m_docRoot;
 };
 

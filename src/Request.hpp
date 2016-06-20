@@ -31,7 +31,9 @@ public:
 	std::string url;
 	std::map<std::string, std::string> header;
 	std::string sessionid;
+	std::map<std::string, std::string> session_;
 	std::string transport;
+	std::map<std::string, std::string>query;
 private:
 	http_parser m_parse;
 	http_parser_settings m_httpSetting;

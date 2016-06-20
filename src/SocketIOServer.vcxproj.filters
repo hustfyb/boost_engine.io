@@ -64,6 +64,7 @@
       <Filter>transers</Filter>
     </ClInclude>
     <ClInclude Include="engineIo.hpp" />
+    <ClInclude Include="util.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -100,5 +101,6 @@
       <Filter>transers</Filter>
     </ClCompile>
     <ClCompile Include="engineIo.cpp" />
+    <ClCompile Include="util.cpp" />
   </ItemGroup>
 </Project>

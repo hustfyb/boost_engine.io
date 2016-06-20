@@ -13,6 +13,7 @@
 #include "header.hpp"
 #include "Connection.h"
 typedef function<void(system::error_code ec, std::size_t length)> Callback;
+typedef function<void(Request&, Response&, Callback)> FiterFunc;
 class Server :asio::coroutine
 {
 public:
@@ -22,13 +23,13 @@ public:
 	}
 
 	void startListen(system::error_code ec);
-	void addFilter(char *filter, function<void(Request&, Response&, Callback)>);
-
+	void addFilter(char *filter, FiterFunc);
+	bool processFilter(Request &request, Response &response, Callback cb);
 private:
 	asio::io_service &ios;
 	shared_ptr<tcp::acceptor> m_acceptor;
 	shared_ptr<Connection> m_connection;
-	typedef std::map<std::string, ProductCreator> AssocMap;
-
+	typedef std::map<std::string, FiterFunc> FilterMap;
+	FilterMap filterMap;
 };
 

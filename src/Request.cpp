@@ -1,5 +1,6 @@
 #include "header.hpp"
 #include "Request.hpp"
+#include "util.hpp"
 using namespace std;
 
 
@@ -41,6 +42,7 @@ int Request::on_url(http_parser* parse, const char *at, size_t length)
 {
 	Request *request = (Request*)parse->data;
 	request->url.assign(at, length);
+	util::parseQueryString(request->url,request->query);
 	return 0;
 }
 

@@ -159,6 +159,7 @@
     <ClInclude Include="Setting.hpp" />
     <ClInclude Include="SocketIo.hpp" />
     <ClInclude Include="TranserBase.h" />
+    <ClInclude Include="util.hpp" />
     <ClInclude Include="uuid_t.hpp" />
     <ClInclude Include="WebsocketTranser.h" />
   </ItemGroup>
@@ -185,6 +186,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">header.hpp</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="TranserBase.cpp" />
+    <ClCompile Include="util.cpp" />
     <ClCompile Include="uuid_t.cpp" />
     <ClCompile Include="WebsocketTranser.cpp" />
   </ItemGroup>
