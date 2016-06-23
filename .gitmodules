@@ -1,3 +1,6 @@
 [submodule "submodules/http-parser"]
 	path = submodules/http-parser
 	url = https://github.com/nodejs/http-parser.git
+[submodule "rapidjson"]
+	path = rapidjson
+	url = https://github.com/TencentOpen/rapidjson.git

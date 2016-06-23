@@ -23,7 +23,7 @@ namespace SocketIo {
 //		char uuidBuff[36];
 		uuid_t uuid;
 		shared_ptr<session_t> session =make_shared<session_t>();
-		session->sessionid = uuid.toString();
+		session->sid = uuid.toString();
 // 		session->queue = NULL;
 // 		session->client = NULL;
 // 		session->endpoint = NULL;
@@ -33,10 +33,10 @@ namespace SocketIo {
 //		timeout->data = g_strdup(uuidBuff);
 //		ev_timer_init(timeout, clear_handshake_cb, global_config->server_close_timeout, 0);
 //		ev_timer_start(ev_default_loop(0), timeout);
-		session_map[session->sessionid]= session;
+		session_map[session->sid]= session;
 
 		format fmt("%s:%d:%d:%s");
-		fmt % session->sessionid % g_setting.getHeartbeat_timeout()
+		fmt % session->sid % g_setting.getHeartbeat_timeout()
 			% g_setting.getClose_timeout() % g_setting.getTransports();
 		response.sendData(fmt.str(), cb);
 	}

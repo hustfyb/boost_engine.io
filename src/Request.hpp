@@ -10,7 +10,7 @@ enum SESSION_STATE {
 };
 
 typedef struct {
-	std::string sessionid;
+	std::string sid;
 	//	client_t *client;
 	//	GQueue *queue;
 	//	char *endpoint;

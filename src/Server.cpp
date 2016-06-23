@@ -54,6 +54,7 @@ bool Server::processFilter(Request &request, Response &response, Callback cb)
 	{
 		cregex regex = cregex::compile(filter.first);
 		if (regex_match(request.url.c_str(), regex)) {
+			filter.second(request, response, cb);
 			match = true;
 		}
 	}
