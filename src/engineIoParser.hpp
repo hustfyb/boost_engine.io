@@ -12,6 +12,7 @@ namespace engineIoParser
 		, noop
 	}engineIoState;
 
-	int encodePacket(engineIoState type, std::string &data);
+	std::string encodePacket(engineIoState type, std::string &data);
+	std::string encodePayloadAsBinary(std::string data);
 };
 

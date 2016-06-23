@@ -9,17 +9,20 @@
 #define BOSST_TEST_INCLUDED
 #include <boost/test/unit_test.hpp>
 
+#include "../engineIoParser.hpp"
 using namespace boost;
+using namespace engineIoParser;
+BOOST_AUTO_TEST_SUITE(t_engineIo)
 
-BOOST_AUTO_TEST_SUITE(s_smart_ptr)
-
-BOOST_AUTO_TEST_CASE(t_scoped_ptr)
+BOOST_AUTO_TEST_CASE(t_engineIo_parse)
 {
-	scoped_ptr<int> p(new int(874));
-	BOOST_CHECK(p);
-	BOOST_CHECK_EQUAL(*p, 874);
-	p.reset();
-	BOOST_CHECK(p == 0);
+	std::string str("123");
+	std::string packet=encodePacket(open, str);
+	BOOST_CHECK_EQUAL(packet, "0123");
+	std::string payload = encodePayloadAsBinary(packet);
+	std::string data("___0123");
+	data[0] = 0; data[1] = 4; data[2] = 0xff;
+	BOOST_CHECK_EQUAL(data, payload);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
