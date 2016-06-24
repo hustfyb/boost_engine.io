@@ -3,6 +3,11 @@
 #include "SocketIo.hpp"
 #include "Server.hpp"
 #include "Setting.hpp"
+#include <boost/xpressive/xpressive.hpp>
+
+#define CallFromThis(x) bind(x, shared_from_this(), _1, _2) 
+using namespace xpressive;
+
 Connection::Connection(Server &serv)
 	:server(serv)
 	,ios(serv.get_io_service())
@@ -39,7 +44,19 @@ void Connection::run(system::error_code ec, std::size_t length)
 					parseResult = request.parse(buffer_->data(), length);
 				} while (indeterminate(parseResult));
 				if (parseResult == true) {
-					if (!server.processFilter(request, response, bind(&Connection::run, shared_from_this(), _1, _2))) {
+
+					std::pair<std::string, FiterFunc> filter;
+					foreach(filter, server.filterMap)
+					{
+						cregex regex = cregex::compile(filter.first);
+						if (regex_match(request.url.c_str(), regex)) {
+							yield filter.second(request, response, CallFromThis(&Connection::run));
+						}
+					}
+
+
+					yield parseResult = server.processFilter(request, response, bind(&Connection::run, shared_from_this(), _1, _2));
+					if (!parseResult) {
 						yield response.sendFile(g_setting.getRoot(), request.url, bind(&Connection::run, shared_from_this(), _1, _2));
 					}
 					//socket.io Test

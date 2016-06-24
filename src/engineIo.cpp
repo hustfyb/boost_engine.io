@@ -43,9 +43,9 @@ void engineIo::handleHandShake(Request& request, Response& response, Callback cb
 	boost::property_tree::write_json(ss, pt_root,false);
 	std::string s = ss.str();
 
-	encodePacket(open, s);
+	std::string payload=encodePayloadAsBinary(encodePacket(open, s));
 
-	//response.sendData()
+	response.sendData(payload,cb);
 	return ;
 }
 

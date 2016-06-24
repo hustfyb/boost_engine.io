@@ -56,6 +56,7 @@ bool Server::processFilter(Request &request, Response &response, Callback cb)
 		if (regex_match(request.url.c_str(), regex)) {
 			filter.second(request, response, cb);
 			match = true;
+			return true;
 		}
 	}
 

@@ -16,6 +16,7 @@ typedef function<void(system::error_code ec, std::size_t length)> Callback;
 typedef function<void(Request&, Response&, Callback)> FiterFunc;
 class Server :asio::coroutine
 {
+	friend class Connection;
 public:
 	explicit Server(asio::io_service& io_service);
 	asio::io_service &get_io_service() {
