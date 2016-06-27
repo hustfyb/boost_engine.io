@@ -3,7 +3,11 @@
 #include "Request.hpp"
 #include "Response.hpp"
 #include "../submodules/http-parser/http_parser.h"
+#include "Server.hpp"
+typedef function<void(Request&, Response&, Callback)> FiterFunc;
+typedef std::map<std::string, FiterFunc> FilterMap;
 class Server;
+
 class Connection :asio::coroutine,
 	public enable_shared_from_this<Connection>
 {
@@ -19,5 +23,8 @@ private:
 	Server			&server;
 	Request			request;
 	Response		response;
+
+	FilterMap::iterator filter_iter;
+	bool filterMatch;
 };
 

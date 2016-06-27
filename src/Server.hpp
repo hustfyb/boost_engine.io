@@ -12,8 +12,9 @@
 
 #include "header.hpp"
 #include "Connection.h"
-typedef function<void(system::error_code ec, std::size_t length)> Callback;
 typedef function<void(Request&, Response&, Callback)> FiterFunc;
+typedef std::map<std::string, FiterFunc> FilterMap;
+
 class Server :asio::coroutine
 {
 	friend class Connection;
@@ -30,7 +31,6 @@ private:
 	asio::io_service &ios;
 	shared_ptr<tcp::acceptor> m_acceptor;
 	shared_ptr<Connection> m_connection;
-	typedef std::map<std::string, FiterFunc> FilterMap;
 	FilterMap filterMap;
 };
 

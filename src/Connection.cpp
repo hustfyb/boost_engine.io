@@ -29,6 +29,7 @@ void Connection::run(system::error_code ec, std::size_t length)
 	tribool parseResult = false;
 	bool exit = false;
 	bool bit = false;
+	cregex regex;
 	reenter(this) {
 		if (!ec) {
 			buffer_.reset(new ArrayBuffer);
@@ -44,19 +45,20 @@ void Connection::run(system::error_code ec, std::size_t length)
 					parseResult = request.parse(buffer_->data(), length);
 				} while (indeterminate(parseResult));
 				if (parseResult == true) {
-
-					std::pair<std::string, FiterFunc> filter;
-					foreach(filter, server.filterMap)
+					filter_iter = server.filterMap.begin();
+					while (filter_iter !=server.filterMap.end())
 					{
-						cregex regex = cregex::compile(filter.first);
+						regex = cregex::compile(filter_iter->first);
 						if (regex_match(request.url.c_str(), regex)) {
-							yield filter.second(request, response, CallFromThis(&Connection::run));
+							yield filter_iter->second(request, response, CallFromThis(&Connection::run));
+							filterMatch = true;
 						}
+						filter_iter++;
 					}
 
 
-					yield parseResult = server.processFilter(request, response, bind(&Connection::run, shared_from_this(), _1, _2));
-					if (!parseResult) {
+					//yield parseResult = server.processFilter(request, response, bind(&Connection::run, shared_from_this(), _1, _2));
+					if (!filterMatch) {
 						yield response.sendFile(g_setting.getRoot(), request.url, bind(&Connection::run, shared_from_this(), _1, _2));
 					}
 					//socket.io Test

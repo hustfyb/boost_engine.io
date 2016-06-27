@@ -17,12 +17,6 @@
 #include <boost/enable_shared_from_this.hpp>
 #include "header.hpp"
 using namespace boost::asio;
-struct header
-{
-	std::string name;
-	std::string value;
-};
-
 /// A reply to be sent to a client.
 class Response :boost::asio::coroutine
 	, public boost::enable_shared_from_this<Response>
@@ -52,7 +46,7 @@ public:
 	} status;
 
 	/// The headers to be included in the reply.
-	std::vector<header> headers;
+	std::map<std::string,std::string> headers;
 
 	/// The content to be sent in the reply.
 	std::string content;
@@ -68,9 +62,11 @@ public:
 	void sendDataContinue(char *data, int dataSize, function<void(system::error_code, std::size_t)> cb);
 	void stock_reply(status_type status);
 	void sendFile(std::string &docRoot, std::string &url, function<void(system::error_code, std::size_t)> cb);
+	void setHeader(std::string &name, std::string &value);
 private:
 	char buff[4096];
 	/// ¶Ô¶ËµÄsocket;
 	asio::ip::tcp::socket &socket_;
 	bool url_decode(const std::string& in, std::string& out);
+	void clearHeaders();
 };

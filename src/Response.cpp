@@ -97,21 +97,19 @@ namespace misc_strings {
 	const char crlf[] = { '\r', '\n' };
 
 } // namespace misc_strings
-
+  
 std::vector<boost::asio::const_buffer> Response::to_buffers()
 {
-	std::vector<boost::asio::const_buffer> buffers;
-	buffers.push_back(status_strings::to_buffer(status));
-	for (std::size_t i = 0; i < headers.size(); ++i)
-	{
-		header& h = headers[i];
-		buffers.push_back(boost::asio::buffer(h.name));
-		buffers.push_back(boost::asio::buffer(misc_strings::name_value_separator));
-		buffers.push_back(boost::asio::buffer(h.value));
-		buffers.push_back(boost::asio::buffer(misc_strings::crlf));
-	}
-	buffers.push_back(boost::asio::buffer(misc_strings::crlf));
-	buffers.push_back(boost::asio::buffer(content));
+ 	std::vector<boost::asio::const_buffer> buffers;
+ 	buffers.push_back(status_strings::to_buffer(status));
+	for (auto header = headers.begin(); header != headers.end(); header++) {
+  		buffers.push_back(boost::asio::buffer(header->first));
+ 		buffers.push_back(boost::asio::buffer(misc_strings::name_value_separator));
+  		buffers.push_back(boost::asio::buffer(header->second));
+  		buffers.push_back(boost::asio::buffer(misc_strings::crlf));
+ 	}
+ 	buffers.push_back(boost::asio::buffer(misc_strings::crlf));
+ 	buffers.push_back(boost::asio::buffer(content));
 	return buffers;
 }
 
@@ -240,16 +238,18 @@ void Response::stock_reply(Response::status_type status)
 {
 	this->status = status;
 	content = stock_replies::to_string(status);
-	headers.resize(2);
-	headers[0].name = "Content-Length";
-	headers[0].value = boost::lexical_cast<std::string>(content.size());
-	headers[1].name = "Content-Type";
-	headers[1].value = "text/html";
+	if (headers.find("Content-Length") == headers.end()) {
+		headers["Content-Length"] = boost::lexical_cast<std::string>(content.size());
+	}
+	if (headers.find("Content-Type") == headers.end()) {
+		headers["Content-Type"] = "text/html";
+	}
 	return;
 }
 
 void Response::send(status_type status, function<void(system::error_code, std::size_t)> cb)
 {
+	clearHeaders();
 	stock_reply(status);
 	asio::async_write(socket_, this->to_buffers(), cb);
 }
@@ -258,11 +258,12 @@ void Response::sendData(std::string &data,function<void(system::error_code, std:
 {
 	status = Response::ok;
 	content = data;
-	headers.resize(2);
-	headers[0].name = "Content-Length";
-	headers[0].value = boost::lexical_cast<std::string>(content.size());
-	headers[1].name = "Content-Type";
-	headers[1].value = "text/plain";
+	if (headers.find("Content-Length") == headers.end()) {
+		headers["Content-Length"] = boost::lexical_cast<std::string>(content.size());
+	}
+	if (headers.find("Content-Type") == headers.end()) {
+		headers["Content-Type"] = "text/html";
+	}
 	asio::async_write(socket_, this->to_buffers(), cb);
 }
 
@@ -367,11 +368,19 @@ void Response::sendFile(std::string &docRoot, std::string &url, function<void(sy
 	while (is.read(buf, sizeof(buf)).gcount() > 0) {
 		this->content.append(buf, is.gcount());
 	}
-	this->headers.resize(2);
-	this->headers[0].name = "Content-Length";
-	this->headers[0].value = boost::lexical_cast<std::string>(this->content.size());
-	this->headers[1].name = "Content-Type";
-	this->headers[1].value = mime_types::extension_to_type(extension);
+	clearHeaders();
+	headers["Content-Length"] = boost::lexical_cast<std::string>(content.size());
+	headers["Content-Type"] = mime_types::extension_to_type(extension);
 	asio::async_write(socket_, this->to_buffers(), cb);
+}
+
+void Response::setHeader(std::string &name, std::string &value)
+{
+	headers[name] = value;
+}
+
+void Response::clearHeaders()
+{
+	headers.clear();
 }
 

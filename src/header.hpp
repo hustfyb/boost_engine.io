@@ -40,4 +40,7 @@ using namespace boost;
 
 typedef boost::asio::ip::tcp tcp;
 
+typedef function<void(system::error_code ec, std::size_t length)> Callback;
+
+
 
