@@ -41,26 +41,9 @@ void Server::startListen(system::error_code ec)
 	}
 }
 
-void Server::addFilter(char *filter, FiterFunc filterFunc)
+void Server::addFilter(char *match, FilterBase &filter)
 {
-	filterMap[std::string(filter)] = filterFunc;
-}
-
-bool Server::processFilter(Request &request, Response &response, Callback cb)
-{
-	std::pair<std::string, FiterFunc> filter;
-	bool match = false;
-	foreach(filter, filterMap)
-	{
-		cregex regex = cregex::compile(filter.first);
-		if (regex_match(request.url.c_str(), regex)) {
-			filter.second(request, response, cb);
-			match = true;
-			return true;
-		}
-	}
-
-	return false;
+	filterMap[std::string(match)] = &filter;
 }
 
 #include <boost/asio/unyield.hpp>

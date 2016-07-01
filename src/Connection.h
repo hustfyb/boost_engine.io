@@ -4,8 +4,8 @@
 #include "Response.hpp"
 #include "../submodules/http-parser/http_parser.h"
 #include "Server.hpp"
-typedef function<void(Request&, Response&, Callback)> FiterFunc;
-typedef std::map<std::string, FiterFunc> FilterMap;
+#include "FilterBase.hpp"
+typedef std::map<std::string, FilterBase *> FilterMap;
 class Server;
 
 class Connection :asio::coroutine,

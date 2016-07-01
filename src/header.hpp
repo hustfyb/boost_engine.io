@@ -13,6 +13,7 @@
 #define _WIN32_WINNT 0x0501
 #define _SCL_SECURE_NO_WARNINGS
 #endif
+
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/signals2.hpp>
@@ -30,17 +31,23 @@
 #include <boost/property_tree/json_parser.hpp>
 
 #define foreach BOOST_FOREACH
+///////////////////Thread  ////////////////////////////////////////////
+//#include <boost/thread.hpp>
+
+///////////////////////STL STD ////////////////////////////////////////////
 #include <string>
 #include <iostream>
 #include <map>
 #include <vector>
 
+
+
 #define logf std::cout<<__FUNCTION__<<":"
 using namespace boost;
 
-typedef boost::asio::ip::tcp tcp;
-
-typedef function<void(system::error_code ec, std::size_t length)> Callback;
+// typedef boost::asio::ip::tcp tcp;
+// 
+// typedef function<void(system::error_code ec, std::size_t length)> Callback;
 
 
 

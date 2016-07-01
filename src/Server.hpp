@@ -12,8 +12,8 @@
 
 #include "header.hpp"
 #include "Connection.h"
-typedef function<void(Request&, Response&, Callback)> FiterFunc;
-typedef std::map<std::string, FiterFunc> FilterMap;
+#include "FilterBase.hpp"
+typedef std::map<std::string, FilterBase *> FilterMap;
 
 class Server :asio::coroutine
 {
@@ -25,8 +25,7 @@ public:
 	}
 
 	void startListen(system::error_code ec);
-	void addFilter(char *filter, FiterFunc);
-	bool processFilter(Request &request, Response &response, Callback cb);
+	void addFilter(char *match, FilterBase &filter);
 private:
 	asio::io_service &ios;
 	shared_ptr<tcp::acceptor> m_acceptor;
