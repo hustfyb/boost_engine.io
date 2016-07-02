@@ -50,7 +50,7 @@ void Connection::run(system::error_code ec, std::size_t length)
 					{
 						regex = cregex::compile(filter_iter->first);
 						if (regex_match(request.url.c_str(), regex)) {
-							yield filter_iter->second(request, response, CallFromThis(&Connection::run));
+							yield filter_iter->second->process(request, response, CallFromThis(&Connection::run));
 							filterMatch = true;
 						}
 						filter_iter++;

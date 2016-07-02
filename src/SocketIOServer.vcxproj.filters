@@ -63,9 +63,12 @@
     <ClInclude Include="WebsocketTranser.h">
       <Filter>transers</Filter>
     </ClInclude>
-    <ClInclude Include="engineIo.hpp" />
     <ClInclude Include="util.hpp" />
     <ClInclude Include="engineIoParser.hpp" />
+    <ClInclude Include="EngineIo.hpp" />
+    <ClInclude Include="FilterBase.hpp">
+      <Filter>filter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -101,8 +104,8 @@
     <ClCompile Include="WebsocketTranser.cpp">
       <Filter>transers</Filter>
     </ClCompile>
-    <ClCompile Include="engineIo.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="engineIoParser.cpp" />
+    <ClCompile Include="EngineIo.cpp" />
   </ItemGroup>
 </Project>

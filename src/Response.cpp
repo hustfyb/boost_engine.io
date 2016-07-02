@@ -366,7 +366,7 @@ void Response::sendFile(std::string &docRoot, std::string &url, function<void(sy
 	this->content.clear();
 	char buf[512];
 	while (is.read(buf, sizeof(buf)).gcount() > 0) {
-		this->content.append(buf, is.gcount());
+		this->content.append(buf, (unsigned int)is.gcount());
 	}
 	clearHeaders();
 	headers["Content-Length"] = boost::lexical_cast<std::string>(content.size());

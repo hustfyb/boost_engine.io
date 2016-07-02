@@ -4,14 +4,14 @@
 using namespace engineIoParser;
 #include <boost/unordered_map.hpp>
 unordered_map<std::string, shared_ptr<session_t> > sessionStore;
-engineIo::engineIo()
+EngineIo::EngineIo()
 {
 	pingTimeout = 60000;
 	pingInterval = 25000;
 	//upgradeTimeout : 10000,
 }
 
-void engineIo::operator()(Request&request, Response&response, Callback cb)
+void EngineIo::process(Request&request, Response&response, Callback cb)
 {
  	if (request.query.find("sid") != request.query.end()) {
 // 
@@ -22,7 +22,7 @@ void engineIo::operator()(Request&request, Response&response, Callback cb)
 
 }
 
-void engineIo::handleHandShake(Request& request, Response& response, Callback cb)
+void EngineIo::handleHandShake(Request& request, Response& response, Callback cb)
 {
 	uuid_t uid;
 	shared_ptr<session_t> session = make_shared<session_t>();

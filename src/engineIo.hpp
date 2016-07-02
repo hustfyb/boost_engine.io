@@ -1,11 +1,12 @@
 #pragma once
 #include "header.hpp"
 #include "Server.hpp"
-class engineIo
+#include "FilterBase.hpp"
+class EngineIo: public FilterBase
 {
 public:
-	engineIo();
-	void operator()(Request&, Response&, Callback);
+	EngineIo();
+	virtual void process(Request&, Response&, Callback);
 
 //configValue
 	int pingInterval;
