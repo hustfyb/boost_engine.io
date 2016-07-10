@@ -19,7 +19,7 @@ void Setting::setConfig(std::string &fileName)
 	}
 	catch (...)
 	{
-		logf << "config file error\r\n";
+		BOOST_LOG_TRIVIAL(error) << "config file error";
 	}
 
 }

@@ -25,11 +25,4 @@ public:
 
 		ObjectFactory<TranserBase, std::string>::Instance()->Register(className, RegisterTranserClass::Create);
 	}
-	void init_connect(Request &request);
 };
-
-template <class Transer>
-void RegisterTranserClass<Transer>::init_connect(Request &request)
-{
-
-}

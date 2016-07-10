@@ -28,7 +28,6 @@ Request::~Request()
 tribool Request::parse(char *data,std::size_t dSize)
 {
 	size_t rt=http_parser_execute(&m_parse, &m_httpSetting, data, dSize);
-	logf << rt << "\r\n";
 	if (rt == 0) {
 		return false;
 	};
@@ -48,7 +47,6 @@ int Request::on_url(http_parser* parse, const char *at, size_t length)
 
 int Request::on_status(http_parser*, const char *at, size_t length)
 {
-	logf << "\r\n";
 	return 0;
 
 }
@@ -70,21 +68,18 @@ int Request::on_header_value(http_parser* parse, const char *at, size_t length)
 
 int Request::on_headers_complete(http_parser*)
 {
-	logf << "\r\n";
 	return 0;
 
 }
 
 int Request::on_body(http_parser*, const char *at, size_t length)
 {
-	logf << "\r\n";
 	return 0;
 
 }
 
 int Request::on_message_complete(http_parser*)
 {
-	logf << "\r\n";
 	return 0;
 }
 

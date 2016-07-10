@@ -30,6 +30,11 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
+////////////////////LOG //////////////////////////////////////////////////
+#include <boost/log/trivial.hpp>
+#include <boost/log/core.hpp>
+#include <boost/log/expressions.hpp>
+
 #define foreach BOOST_FOREACH
 ///////////////////Thread  ////////////////////////////////////////////
 //#include <boost/thread.hpp>
@@ -41,13 +46,12 @@
 #include <vector>
 
 
-
 #define logf std::cout<<__FUNCTION__<<":"
 using namespace boost;
 
-// typedef boost::asio::ip::tcp tcp;
-// 
-// typedef function<void(system::error_code ec, std::size_t length)> Callback;
+typedef boost::asio::ip::tcp tcp;
+ 
+typedef function<void(system::error_code ec, std::size_t length)> Callback;
 
 
 

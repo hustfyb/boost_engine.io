@@ -155,6 +155,7 @@
     <ClInclude Include="header.hpp" />
     <ClInclude Include="mime_types.hpp" />
     <ClInclude Include="ObjectFactory.h" />
+    <ClInclude Include="PollTranser.h" />
     <ClInclude Include="Request.hpp" />
     <ClInclude Include="Response.hpp" />
     <ClInclude Include="Server.hpp" />
@@ -177,6 +178,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">header.hpp</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="mime_types.cpp" />
+    <ClCompile Include="PollTranser.cpp" />
     <ClCompile Include="Request.cpp" />
     <ClCompile Include="Response.cpp" />
     <ClCompile Include="Server.cpp">

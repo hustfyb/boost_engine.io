@@ -17,7 +17,7 @@ Server::Server(boost::asio::io_service& io_service) : ios(io_service)
 	}
 	catch (system::system_error &e)
 	{
-		logf << e.what() << "\r\n";
+		BOOST_LOG_TRIVIAL(error)<<"acceptor error " << e.what();
 	}
 }
 
@@ -37,7 +37,7 @@ void Server::startListen(system::error_code ec)
 		}
 	}
 	else {
-		logf << "error:" << ec.message() << "\r\n";
+		BOOST_LOG_TRIVIAL(error) << "listen error:" << ec.message();
 	}
 }
 

@@ -57,7 +57,6 @@ namespace SocketIo {
 			//erase_first(trans_info.i, "i=");
  		}
  		else {
- 			logf<<"trans_info is NULL!!!!!!!!!\r\n";
  			return false;
  		}
  		return true;

@@ -69,6 +69,9 @@
     <ClInclude Include="FilterBase.hpp">
       <Filter>filter</Filter>
     </ClInclude>
+    <ClInclude Include="PollTranser.h">
+      <Filter>transers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -107,5 +110,8 @@
     <ClCompile Include="util.cpp" />
     <ClCompile Include="engineIoParser.cpp" />
     <ClCompile Include="EngineIo.cpp" />
+    <ClCompile Include="PollTranser.cpp">
+      <Filter>transers</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

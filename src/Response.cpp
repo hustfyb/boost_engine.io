@@ -374,6 +374,11 @@ void Response::sendFile(std::string &docRoot, std::string &url, function<void(sy
 	asio::async_write(socket_, this->to_buffers(), cb);
 }
 
+void Response::setHeader(const char* name, const char * value)
+{
+	headers[std::string(name)] = std::string(value);
+}
+
 void Response::setHeader(std::string &name, std::string &value)
 {
 	headers[name] = value;

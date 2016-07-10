@@ -63,6 +63,7 @@ public:
 	void stock_reply(status_type status);
 	void sendFile(std::string &docRoot, std::string &url, function<void(system::error_code, std::size_t)> cb);
 	void setHeader(std::string &name, std::string &value);
+	void setHeader(const char* name, const char * value);
 private:
 	char buff[4096];
 	/// ¶Ô¶ËµÄsocket;

@@ -2,6 +2,8 @@
 #include "header.hpp"
 #include "../submodules/http-parser/http_parser.h"
 #include "uuid_t.hpp"
+#include "TranserBase.h"
+
 enum SESSION_STATE {
 	DISCONNECTED_STATE = -2,
 	DISCONNECTING_STATE = -1,
@@ -9,8 +11,14 @@ enum SESSION_STATE {
 	CONNECTED_STATE = 1
 };
 
+class Request;
+class Response;
+class TranserBase;
 typedef struct {
 	std::string sid;
+	Request* request;
+	Response* response;
+	shared_ptr<TranserBase> transport;
 	//	client_t *client;
 	//	GQueue *queue;
 	//	char *endpoint;
@@ -34,8 +42,8 @@ public:
 	std::map<std::string, std::string> session_;
 	std::string transport;
 	std::map<std::string, std::string>query;
-private:
 	http_parser m_parse;
+private:
 	http_parser_settings m_httpSetting;
 
 public:
