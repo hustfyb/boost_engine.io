@@ -155,13 +155,13 @@
     <ClInclude Include="header.hpp" />
     <ClInclude Include="mime_types.hpp" />
     <ClInclude Include="ObjectFactory.h" />
-    <ClInclude Include="PollTranser.h" />
+    <ClInclude Include="PollTranser.hpp" />
     <ClInclude Include="Request.hpp" />
     <ClInclude Include="Response.hpp" />
     <ClInclude Include="Server.hpp" />
     <ClInclude Include="Setting.hpp" />
     <ClInclude Include="SocketIo.hpp" />
-    <ClInclude Include="TranserBase.h" />
+    <ClInclude Include="TranserBase.hpp" />
     <ClInclude Include="util.hpp" />
     <ClInclude Include="uuid_t.hpp" />
     <ClInclude Include="WebsocketTranser.h" />

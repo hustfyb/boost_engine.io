@@ -1,7 +1,6 @@
 #include "header.hpp"
-#include "TranserBase.h"
+#include "TranserBase.hpp"
 
-std::vector<std::string> TranserBase::names;
 TranserBase::TranserBase()
 {
 }
@@ -16,7 +15,14 @@ TranserBase * TranserBase::CreateTranserByName(const std::string& className)
 	return ObjectFactory<TranserBase, std::string>::Instance()->CreateObject(className);
 }
 
-std::vector<std::string> & TranserBase::getTransersName()
+bool TranserBase::existTranser(const std::string& className)
+{
+	auto _iter = find(names.begin(), names.end(), className);
+	return (_iter != names.end());
+}
+
+std::vector<std::string> & TranserBase::getTranserNames()
 {
 	return names;
 }
+

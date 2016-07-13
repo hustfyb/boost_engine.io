@@ -2,7 +2,7 @@
 #include "header.hpp"
 #include "../submodules/http-parser/http_parser.h"
 #include "uuid_t.hpp"
-#include "TranserBase.h"
+#include "TranserBase.hpp"
 
 enum SESSION_STATE {
 	DISCONNECTED_STATE = -2,
@@ -37,14 +37,15 @@ public:
 	~Request();
 	tribool parse(char *,std::size_t);
 	std::string url;
-	std::map<std::string, std::string> header;
+	std::map<std::string, std::string> header_;
 	std::string sessionid;
 	std::map<std::string, std::string> session_;
 	std::string transport;
-	std::map<std::string, std::string>query;
-	http_parser m_parse;
+	std::map<std::string, std::string> query_;
+	unsigned int method_;
 private:
 	http_parser_settings m_httpSetting;
+	http_parser m_parse;
 
 public:
 	bool upgrade();

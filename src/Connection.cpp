@@ -14,13 +14,12 @@ Connection::Connection(Server &serv)
 	,m_socket(serv.get_io_service())
 	,response(m_socket)
 {
-	logf << "\r\n";
 }
 
 
 Connection::~Connection()
 {
-	logf << "\r\n";
+	LOG(info) << "Connection down" << request.url;
 }
 
 #include <boost/asio/yield.hpp>

@@ -62,7 +62,7 @@ int Request::on_header_value(http_parser* parse, const char *at, size_t length)
 {
 	Request *request = (Request*)parse->data;
 	string value(at, length);
-	request->header.insert(pair<string, string>(request->m_head, value));
+	request->header_.insert(pair<string, string>(request->m_head, value));
 	return 0;
 }
 
@@ -92,6 +92,7 @@ int Request::on_message_begin(http_parser*parse)
 {
 	Request *request = (Request*)parse->data;
 	request->m_state = http_done;
+	request->method_ = parse->method;
 	return 0;
 }
 

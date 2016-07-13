@@ -53,5 +53,6 @@ typedef boost::asio::ip::tcp tcp;
  
 typedef function<void(system::error_code ec, std::size_t length)> Callback;
 
+#define LOG(x) BOOST_LOG_TRIVIAL(x)<<"["<<__FUNCTION__<<":"<<__LINE__<<"]"<<" "
 
 

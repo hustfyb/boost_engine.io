@@ -3,7 +3,7 @@
 #include <boost/xpressive/xpressive.hpp>
 #include <boost/format.hpp>
 #include "Setting.hpp"
-#include "TranserBase.h"
+#include "TranserBase.hpp"
 using namespace xpressive;
 namespace SocketIo {
 	unordered_map<std::string, shared_ptr<session_t> > session_map;
@@ -63,7 +63,7 @@ namespace SocketIo {
  	}
 
 	int handle_transport(Request &request, Response &response, function<void(system::error_code, std::size_t)> cb) {
-		std::vector<std::string> tt = TranserBase::getTransersName();
+		std::vector<std::string> tt = TranserBase::getTranserNames();
 		Transer *transer = TranserBase::CreateTranserByName(request.transport);
 		//if session no data
 		//transer->output

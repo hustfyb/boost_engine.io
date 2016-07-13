@@ -1,7 +1,7 @@
 #include "header.hpp"
 #include "WebsocketTranser.h"
 
-RegisterTranserClass<WebsocketTranser> RegisterWebsocket("websocket");
+//RegisterTranserClass<WebsocketTranser> RegisterWebsocket("websocket");
 WebsocketTranser::WebsocketTranser()
 {
 }

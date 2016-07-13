@@ -12,6 +12,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/bind.hpp>
 #include <fstream>
+#include "Request.hpp"
 #include "mime_types.hpp"
 namespace status_strings {
 
@@ -256,7 +257,6 @@ void Response::send(status_type status, function<void(system::error_code, std::s
 
 void Response::sendData(std::string &data,function<void(system::error_code, std::size_t)> cb)
 {
-	status = Response::ok;
 	content = data;
 	if (headers.find("Content-Length") == headers.end()) {
 		headers["Content-Length"] = boost::lexical_cast<std::string>(content.size());
@@ -387,5 +387,25 @@ void Response::setHeader(std::string &name, std::string &value)
 void Response::clearHeaders()
 {
 	headers.clear();
+}
+
+void Response::setStatus(enum status_type status)
+{
+	this->status = status;
+}
+
+void Response::setCross(Request& request)
+{
+	auto _iter = request.header_.find("Origin");
+	if (_iter == request.header_.end())
+	{
+		this->setHeader(std::string("Access-Control-Allow-Origin"), std::string("*"));
+	}
+	else
+	{
+		this->setHeader("Access-Control-Allow-Origin", _iter->second.c_str());
+		this->setHeader("Access-Control-Allow-Credentials", "true");
+
+	}
 }
 

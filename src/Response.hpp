@@ -16,13 +16,16 @@
 #include <iostream>
 #include <boost/enable_shared_from_this.hpp>
 #include "header.hpp"
+#include "Request.hpp"
 using namespace boost::asio;
 /// A reply to be sent to a client.
 class Response :boost::asio::coroutine
 	, public boost::enable_shared_from_this<Response>
 {
 public:
-	Response(asio::ip::tcp::socket &sock) :socket_(sock) {};
+	Response(asio::ip::tcp::socket &sock) :socket_(sock) {
+		status = Response::ok;
+	};
 	~Response() { }
 	/// The status of the reply.
 	enum status_type
@@ -64,6 +67,8 @@ public:
 	void sendFile(std::string &docRoot, std::string &url, function<void(system::error_code, std::size_t)> cb);
 	void setHeader(std::string &name, std::string &value);
 	void setHeader(const char* name, const char * value);
+	void setStatus(enum status_type status);
+	void setCross(Request& request);
 private:
 	char buff[4096];
 	/// ¶Ô¶ËµÄsocket;
