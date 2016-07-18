@@ -29,6 +29,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/tuple/tuple.hpp>
 
 ////////////////////LOG //////////////////////////////////////////////////
 #include <boost/log/trivial.hpp>

@@ -14,30 +14,29 @@ EngineIo::EngineIo()
 
 void EngineIo::sendErrorMessage(Request &request, Response&response, int code,Callback cb) {
 	response.setHeader("Content-Type","application/json");
-	response.setCross(request);
 	response.setStatus(Response::bad_request);
 	property_tree::ptree pt_root;
 	pt_root.put("code", code);
 	pt_root.put("message", errorMessages[code]);
 	std::stringstream ss;
-	boost::property_tree::write_json(ss, pt_root, false);
+	property_tree::write_json(ss, pt_root, false);
 	std::string s = ss.str();
 	response.sendData(s, cb);
 }
 
 int EngineIo::verify(Request&request, Response&response) {
 	// transport check
-	if (request.query.find("transport") == request.query.end() 
-		|| !TranserBase::existTranser(request.query["transport"])
+	if (request.query_.find("transport") == request.query_.end() 
+		|| !TranserBase::existTranser(request.query_["transport"])
 		)
 	{
-		LOG(error) << "unknown transport " << request.query["transport"];
+		LOG(error) << "unknown transport " << request.query_["transport"];
 		return Errors::UNKNOWN_TRANSPORT;
 	}
 	
 	// sid check
-	auto _sidIter = request.query.find("sid");
-	if (_sidIter != request.query.end())
+	auto _sidIter = request.query_.find("sid");
+	if (_sidIter != request.query_.end())
 	{
 		if (sessionStore.find(_sidIter->second) == sessionStore.end())
 		{
@@ -58,9 +57,10 @@ int EngineIo::verify(Request&request, Response&response) {
 void EngineIo::process(Request&request, Response&response, Callback cb)
 {
 	int checkCode = verify(request, response);
+	response.setCross(request);
 	if (checkCode == Errors::ERROR_OK) {
-		if (request.query.find("sid") != request.query.end()) {
-			sessionStore[request.query["sid"]]->transport->onRequest(request,response,cb);
+		if (request.query_.find("sid") != request.query_.end()) {
+			sessionStore[request.query_["sid"]]->transport->onRequest(request,response,cb);
 		}
 		else
 		{
@@ -77,7 +77,11 @@ void EngineIo::handleHandShake(Request& request, Response& response, Callback cb
 {
 	uuid_t uid;
 	shared_ptr<session_t> session = make_shared<session_t>();
+#ifdef _DEBUG
+	session->sid = "1234";
+#else
 	session->sid = uid.toString();
+#endif
 	sessionStore[session->sid] = session;
 
 	property_tree::ptree pt_root;
@@ -97,7 +101,6 @@ void EngineIo::handleHandShake(Request& request, Response& response, Callback cb
 	session->transport = make_shared<PollTranser>(); //default PollTranser
 
 	response.setHeader(std::string("Content-Type"), std::string("application/octet-stream"));
-	response.setCross(request);
 	response.sendData(payload,cb);
 	LOG(info) << "handshake " << ss.str();
 	return ;

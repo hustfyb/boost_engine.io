@@ -16,6 +16,7 @@ public:
 	~Connection();
 	void run(system::error_code ec, std::size_t length);
 	tcp::socket m_socket;
+	//void recvData(system::error_code ec, std::size_t length);
 private:
 	asio::io_service &ios;
 	typedef array<char, 8192> ArrayBuffer;

@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 
-/*
+
 #define BOOST_TEST_MAIN
 #include <boost/test/included/unit_test.hpp>
 
@@ -27,28 +27,3 @@ BOOST_AUTO_TEST_CASE(t_engineIo_parse)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-*/
-class  base
-{
-public:
-	static int bb;
-};
-
-
- class B:public base
- {
- public:
-	 B();
- };
-
- B::B()
- {
-	 base::bb = -1;
- }
-
- int base::bb = -2;
- B a;
-#include <iostream>
- void main() {
-	 std::cout << "bb=" << base::bb << std::endl;
- }

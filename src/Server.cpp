@@ -33,6 +33,7 @@ void Server::startListen(system::error_code ec)
 				m_connection = boost::make_shared<Connection>(*this);
 				yield m_acceptor->async_accept(m_connection->m_socket, bind(&Server::startListen, this, _1));
 				m_connection->run(system::error_code(), 0);
+				//m_connection->start();
 			} while (1);
 		}
 	}

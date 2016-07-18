@@ -41,7 +41,7 @@ int Request::on_url(http_parser* parse, const char *at, size_t length)
 {
 	Request *request = (Request*)parse->data;
 	request->url.assign(at, length);
-	util::parseQueryString(request->url,request->query);
+	util::parseQueryString(request->url,request->query_);
 	return 0;
 }
 
@@ -69,13 +69,13 @@ int Request::on_header_value(http_parser* parse, const char *at, size_t length)
 int Request::on_headers_complete(http_parser*)
 {
 	return 0;
-
 }
 
-int Request::on_body(http_parser*, const char *at, size_t length)
+int Request::on_body(http_parser* parse, const char *at, size_t length)
 {
+	Request *request = (Request*)parse->data;
+	request->body_.assign(at, length);
 	return 0;
-
 }
 
 int Request::on_message_complete(http_parser*)

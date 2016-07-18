@@ -60,10 +60,10 @@ public:
 	std::vector<boost::asio::const_buffer> to_buffers();
 
 	void send(status_type status,function<void(system::error_code, std::size_t)> cd);
-	void sendData(std::string &data, function<void(system::error_code, std::size_t)> cb);
+	void sendData(std::string &data, function<void(system::error_code, std::size_t)> cb=NULL);
+	void sendData(const char *data, function<void(system::error_code, std::size_t)> cb=NULL);
 	void sendHead(boost::function<void(boost::system::error_code, std::size_t)> cb);
 	void sendDataContinue(char *data, int dataSize, function<void(system::error_code, std::size_t)> cb);
-	void stock_reply(status_type status);
 	void sendFile(std::string &docRoot, std::string &url, function<void(system::error_code, std::size_t)> cb);
 	void setHeader(std::string &name, std::string &value);
 	void setHeader(const char* name, const char * value);

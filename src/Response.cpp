@@ -235,25 +235,15 @@ namespace stock_replies {
 	}
 } // namespace stock_replies
 
-void Response::stock_reply(Response::status_type status)
-{
-	this->status = status;
-	content = stock_replies::to_string(status);
-	if (headers.find("Content-Length") == headers.end()) {
-		headers["Content-Length"] = boost::lexical_cast<std::string>(content.size());
-	}
-	if (headers.find("Content-Type") == headers.end()) {
-		headers["Content-Type"] = "text/html";
-	}
-	return;
-}
-
 void Response::send(status_type status, function<void(system::error_code, std::size_t)> cb)
 {
 	clearHeaders();
-	stock_reply(status);
-	asio::async_write(socket_, this->to_buffers(), cb);
+	setStatus(status);
+	sendData("", cb);
 }
+void Response::sendData(const char *data, function<void(system::error_code, std::size_t)> cb) {
+	sendData(std::string(data), cb);
+};
 
 void Response::sendData(std::string &data,function<void(system::error_code, std::size_t)> cb)
 {

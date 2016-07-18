@@ -42,6 +42,7 @@ public:
 	std::map<std::string, std::string> session_;
 	std::string transport;
 	std::map<std::string, std::string> query_;
+	std::string body_;
 	unsigned int method_;
 private:
 	http_parser_settings m_httpSetting;
