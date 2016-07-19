@@ -13,6 +13,7 @@ public:
 	static std::vector<std::string> names;
 	std::string name_;
 	virtual void onRequest(Request& request, Response& response)=0;
+	std::string id_;
 };
 typedef TranserBase Transer;
 template <class Transer> class RegisterTranserClass

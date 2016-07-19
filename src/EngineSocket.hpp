@@ -18,7 +18,7 @@ public:
 	std::string id_;
 	bool upgrading_;
 	bool upgraded_;
-	ReadState readyState_;
+	ReadyState readyState_;
 private:
 	void onOpen();
 };
