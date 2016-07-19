@@ -1,23 +1,29 @@
 #include "header.hpp"
-#include "engineIoParser.hpp"
+#include "EngineIoParser.hpp"
 
-namespace engineIoParser {
-	std::string encodePacket(EngineIoState type, std::string &data)
+namespace EngineIoParser {
+	std::string encodePacket(EngineIoType type, std::string &data)
 	{
-		std::string result=lexical_cast<std::string>(type)+data;
+		std::string result = lexical_cast<std::string>(type) + data;
 		return result;
 	}
 
-	std::string encodePayloadAsBinary(std::string data){
+	std::string encodePacket(Package &data)
+	{
+		std::string result = lexical_cast<std::string>(data.type) + data.data;
+		return result;
+	}
+
+	std::string encodePayloadAsBinary(std::string &data) {
 		std::string result;
 		int length = data.length();
 		result.insert(result.end(), (char)0);
 		std::string temp;
-		while (length>0){
+		while (length > 0) {
 			temp.insert(temp.end(), (char)(length % 10));
 			length = length / 10;
 		}
-		for (std::string::reverse_iterator _iter=temp.rbegin();_iter!=temp.rend();_iter++)
+		for (std::string::reverse_iterator _iter = temp.rbegin(); _iter != temp.rend(); _iter++)
 		{
 			result.insert(result.end(), *_iter);
 		}
@@ -29,21 +35,21 @@ namespace engineIoParser {
 	shared_ptr<PackageVector> decodePayload(std::string &data, bool binary/*=false*/)
 	{
 		//var err = { type: 'error', data : 'parser error' };
-		shared_ptr<PackageVector> paVectorPtr=make_shared<PackageVector>();
+		shared_ptr<PackageVector> paVectorPtr = make_shared<PackageVector>();
 		int pos = 0;
 		int start = 0;
-		while (pos>=0)
+		while (pos >= 0)
 		{
-			pos = data.find_first_of(':', start+1);
+			pos = data.find_first_of(':', start + 1);
 			if (pos >= 0)
 			{
 				int msgLength;
 				try
 				{
-					msgLength = lexical_cast<int>(data.substr(start, pos-start));
+					msgLength = lexical_cast<int>(data.substr(start, pos - start));
 					std::string msg = data.substr(pos + 1, msgLength);
-					PackagePtr paPtr = decodePacket(msg);
-					if (paPtr==NULL)
+					PackagePtr paPtr = decodePacket(msg,false);
+					if (paPtr == NULL)
 					{
 						break;
 					}
@@ -68,17 +74,27 @@ namespace engineIoParser {
 		}
 	}
 
-	PackagePtr decodePacket(std::string msg,bool binaryType)
+	PackagePtr decodePacket(std::string &msg, bool binaryType)
 	{
-		PackagePtr paPtr = make_shared<property_tree::ptree>();
-		if (msg[0] == 'b')
+		PackagePtr paPtr = make_shared<Package>();
+		if (!binaryType)
 		{
-			throw std::exception("decodeBase64Packet is not implemented.");
+			if (msg[0] == 'b')
+			{
+				throw std::exception("decodeBase64Packet is not implemented.");
+			}
+			paPtr->type = lexical_cast<int>(msg[0]);
+			if (paPtr->type > noop || paPtr->type < open) {
+				return NULL;
+			}
+			paPtr->data = msg.substr(1, msg.length() - 1);
+			return paPtr;
 		}
-		EngineIoState type = (EngineIoState)msg[0];
-
-
+		else
+		{
+			throw std::exception("binaryType is not implemented.");
+		}
 
 	}
-
+}
 

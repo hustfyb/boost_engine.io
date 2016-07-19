@@ -235,26 +235,18 @@ namespace stock_replies {
 	}
 } // namespace stock_replies
 
-void Response::send(status_type status, function<void(system::error_code, std::size_t)> cb)
+void Response::send(status_type status)
 {
-	clearHeaders();
 	setStatus(status);
-	sendData("", cb);
+	sendData("");
 }
-void Response::sendData(const char *data, function<void(system::error_code, std::size_t)> cb) {
-	sendData(std::string(data), cb);
+void Response::sendData(const char *data) {
+	sendData(std::string(data));
 };
 
-void Response::sendData(std::string &data,function<void(system::error_code, std::size_t)> cb)
+void Response::sendData(std::string &data)
 {
-	content = data;
-	if (headers.find("Content-Length") == headers.end()) {
-		headers["Content-Length"] = boost::lexical_cast<std::string>(content.size());
-	}
-	if (headers.find("Content-Type") == headers.end()) {
-		headers["Content-Type"] = "text/html";
-	}
-	asio::async_write(socket_, this->to_buffers(), cb);
+	content += data;
 }
 
 void Response::sendHead(boost::function<void(boost::system::error_code, std::size_t)> cb)
@@ -316,14 +308,14 @@ void Response::sendFile(std::string &docRoot, std::string &url, function<void(sy
 	std::string request_path;
 	if (!url_decode(url, request_path))
 	{
-		this->send(Response::bad_request, cb);
+		this->send(Response::bad_request);
 		return;
 	}
 	// Request path must be absolute and not contain "..".
 	if (request_path.empty() || request_path[0] != '/'
 		|| request_path.find("..") != std::string::npos)
 	{
-		this->send(Response::bad_request, cb);
+		this->send(Response::bad_request);
 		return;
 	}
 
@@ -347,7 +339,7 @@ void Response::sendFile(std::string &docRoot, std::string &url, function<void(sy
 	std::ifstream is(full_path.c_str(), std::ios::in | std::ios::binary);
 	if (!is)
 	{
-		this->send(Response::not_found, cb);
+		this->send(Response::not_found);
 		return;
 	}
 
@@ -358,10 +350,7 @@ void Response::sendFile(std::string &docRoot, std::string &url, function<void(sy
 	while (is.read(buf, sizeof(buf)).gcount() > 0) {
 		this->content.append(buf, (unsigned int)is.gcount());
 	}
-	clearHeaders();
-	headers["Content-Length"] = boost::lexical_cast<std::string>(content.size());
 	headers["Content-Type"] = mime_types::extension_to_type(extension);
-	asio::async_write(socket_, this->to_buffers(), cb);
 }
 
 void Response::setHeader(const char* name, const char * value)
@@ -374,20 +363,15 @@ void Response::setHeader(std::string &name, std::string &value)
 	headers[name] = value;
 }
 
-void Response::clearHeaders()
-{
-	headers.clear();
-}
-
 void Response::setStatus(enum status_type status)
 {
 	this->status = status;
 }
 
-void Response::setCross(Request& request)
+void Response::setCross(RequestPtr request)
 {
-	auto _iter = request.header_.find("Origin");
-	if (_iter == request.header_.end())
+	auto _iter = request->header_.find("Origin");
+	if (_iter == request->header_.end())
 	{
 		this->setHeader(std::string("Access-Control-Allow-Origin"), std::string("*"));
 	}
@@ -397,5 +381,28 @@ void Response::setCross(Request& request)
 		this->setHeader("Access-Control-Allow-Credentials", "true");
 
 	}
+}
+
+void Response::end(Callback cb)
+{
+	if (!content.empty()) {
+		if (headers.find("Content-Length") == headers.end()) {
+			headers["Content-Length"] = boost::lexical_cast<std::string>(content.size());
+		}
+		if (headers.find("Content-Type") == headers.end()) {
+			headers["Content-Type"] = "text/html";
+		}
+		asio::async_write(socket_, this->to_buffers(), cb);
+	}
+	else
+	{
+		cb(system::error_code(), 0);
+	}
+}
+
+void Response::clear()
+{
+	headers.clear();
+	content.clear();
 }
 

@@ -85,4 +85,12 @@ namespace util {
 		return 0;
 
 	}
+
+	std::string ptToJsonStr(property_tree::ptree &pt)
+	{
+		std::stringstream ss;
+		property_tree::write_json(ss, pt, false);
+		return ss.str();
+	}
+
 }

@@ -47,5 +47,21 @@ void Server::addFilter(char *match, FilterBase &filter)
 	filterMap[std::string(match)] = &filter;
 }
 
+bool Server::processFilter(shared_ptr<Request> req,shared_ptr<Response> res)
+{
+	auto filter_iter = filterMap.begin();
+	auto filterMatch = false;
+	while (filter_iter != filterMap.end())
+	{
+		auto regex = cregex::compile(filter_iter->first);
+		if (regex_match(req->url.c_str(), regex)) {
+			filter_iter->second->process(req, res);
+			filterMatch = true;
+		}
+		filter_iter++;
+	}
+	return filterMatch;
+
+}
 #include <boost/asio/unyield.hpp>
 

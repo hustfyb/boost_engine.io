@@ -59,20 +59,23 @@ public:
 	/// not be changed until the write operation has completed.
 	std::vector<boost::asio::const_buffer> to_buffers();
 
-	void send(status_type status,function<void(system::error_code, std::size_t)> cd);
-	void sendData(std::string &data, function<void(system::error_code, std::size_t)> cb=NULL);
-	void sendData(const char *data, function<void(system::error_code, std::size_t)> cb=NULL);
+	void send(status_type status);
+	void sendData(std::string &data);
+	void sendData(const char *data);
 	void sendHead(boost::function<void(boost::system::error_code, std::size_t)> cb);
 	void sendDataContinue(char *data, int dataSize, function<void(system::error_code, std::size_t)> cb);
 	void sendFile(std::string &docRoot, std::string &url, function<void(system::error_code, std::size_t)> cb);
 	void setHeader(std::string &name, std::string &value);
 	void setHeader(const char* name, const char * value);
 	void setStatus(enum status_type status);
-	void setCross(Request& request);
+	void setCross(RequestPtr request);
+	void end(Callback cb);
+	void clear();
 private:
 	char buff[4096];
 	/// ¶Ô¶ËµÄsocket;
 	asio::ip::tcp::socket &socket_;
 	bool url_decode(const std::string& in, std::string& out);
-	void clearHeaders();
 };
+
+typedef shared_ptr<Response> ResponsePtr;

@@ -11,7 +11,8 @@ public:
 	static bool existTranser(const std::string& className);
 	static std::vector<std::string> &getTranserNames();
 	static std::vector<std::string> names;
-	virtual void onRequest(Request& request, Response& response, Callback cb)=0;
+	std::string name_;
+	virtual void onRequest(Request& request, Response& response)=0;
 };
 typedef TranserBase Transer;
 template <class Transer> class RegisterTranserClass

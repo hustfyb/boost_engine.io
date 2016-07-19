@@ -3,7 +3,7 @@
 class FilterBase
 {
 public:
-	virtual void process(Request&, Response&, Callback) = 0;
+	virtual void process(shared_ptr<Request>, shared_ptr<Response>) = 0;
 
 private:
 

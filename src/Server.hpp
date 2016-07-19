@@ -11,7 +11,7 @@
 #pragma once
 
 #include "header.hpp"
-#include "Connection.h"
+#include "Connection.hpp"
 #include "FilterBase.hpp"
 typedef std::map<std::string, FilterBase *> FilterMap;
 
@@ -26,6 +26,7 @@ public:
 
 	void startListen(system::error_code ec);
 	void addFilter(char *match, FilterBase &filter);
+	bool processFilter(shared_ptr<Request> req, shared_ptr<Response> res);
 private:
 	asio::io_service &ios;
 	shared_ptr<tcp::acceptor> m_acceptor;

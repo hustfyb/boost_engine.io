@@ -44,24 +44,14 @@
     <ClInclude Include="mime_types.hpp">
       <Filter>httpServer</Filter>
     </ClInclude>
-    <ClInclude Include="SocketIo.hpp">
-      <Filter>httpServer</Filter>
-    </ClInclude>
     <ClInclude Include="uuid_t.hpp">
       <Filter>util</Filter>
     </ClInclude>
     <ClInclude Include="Setting.hpp" />
-    <ClInclude Include="Connection.h">
-      <Filter>httpServer</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectFactory.h">
       <Filter>util\objectFactory</Filter>
     </ClInclude>
-    <ClInclude Include="WebsocketTranser.h">
-      <Filter>transers</Filter>
-    </ClInclude>
     <ClInclude Include="util.hpp" />
-    <ClInclude Include="engineIoParser.hpp" />
     <ClInclude Include="EngineIo.hpp" />
     <ClInclude Include="FilterBase.hpp">
       <Filter>filter</Filter>
@@ -71,6 +61,14 @@
     </ClInclude>
     <ClInclude Include="TranserBase.hpp">
       <Filter>transers</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineIoParser.hpp" />
+    <ClInclude Include="EngineSocket.hpp" />
+    <ClInclude Include="WebsocketTranser.hpp">
+      <Filter>transers</Filter>
+    </ClInclude>
+    <ClInclude Include="Connection.hpp">
+      <Filter>httpServer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -91,9 +89,6 @@
     </ClCompile>
     <ClCompile Include="SocketIOServer.cpp" />
     <ClCompile Include="header.cpp" />
-    <ClCompile Include="SocketIo.cpp">
-      <Filter>httpServer</Filter>
-    </ClCompile>
     <ClCompile Include="uuid_t.cpp">
       <Filter>util</Filter>
     </ClCompile>
@@ -105,7 +100,6 @@
       <Filter>transers</Filter>
     </ClCompile>
     <ClCompile Include="util.cpp" />
-    <ClCompile Include="engineIoParser.cpp" />
     <ClCompile Include="EngineIo.cpp" />
     <ClCompile Include="PollTranser.cpp">
       <Filter>transers</Filter>
@@ -113,5 +107,7 @@
     <ClCompile Include="TranserBase.cpp">
       <Filter>transers</Filter>
     </ClCompile>
+    <ClCompile Include="EngineIoParser.cpp" />
+    <ClCompile Include="EngineSocket.cpp" />
   </ItemGroup>
 </Project>

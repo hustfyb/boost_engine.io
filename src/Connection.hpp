@@ -22,10 +22,7 @@ private:
 	typedef array<char, 8192> ArrayBuffer;
 	shared_ptr<ArrayBuffer> buffer_;
 	Server			&server;
-	Request			request;
-	Response		response;
-
-	FilterMap::iterator filter_iter;
-	bool filterMatch;
+	shared_ptr<Request>			request_;
+	shared_ptr<Response>		response_;
 };
 

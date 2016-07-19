@@ -11,20 +11,6 @@ enum SESSION_STATE {
 	CONNECTED_STATE = 1
 };
 
-class Request;
-class Response;
-class TranserBase;
-typedef struct {
-	std::string sid;
-	Request* request;
-	Response* response;
-	shared_ptr<TranserBase> transport;
-	//	client_t *client;
-	//	GQueue *queue;
-	//	char *endpoint;
-	int state; /* -2:disconnected; -1:disconnecting; 0:connecting; 1:connected; */
-			   //	ev_timer close_timeout;
-} session_t;
 
 class Request
 {
@@ -63,6 +49,6 @@ public:
 
 	State m_state;
 	std::string m_head;
-	shared_ptr<session_t> session;
 };
 
+typedef shared_ptr<Request> RequestPtr;

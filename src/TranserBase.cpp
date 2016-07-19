@@ -12,7 +12,9 @@ TranserBase::~TranserBase()
 
 TranserBase * TranserBase::CreateTranserByName(const std::string& className)
 {
-	return ObjectFactory<TranserBase, std::string>::Instance()->CreateObject(className);
+	TranserBase *obj = ObjectFactory<TranserBase, std::string>::Instance()->CreateObject(className);
+	if (obj) obj->name_ = className;
+	return obj;
 }
 
 bool TranserBase::existTranser(const std::string& className)

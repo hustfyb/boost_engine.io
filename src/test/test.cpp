@@ -1,8 +1,8 @@
 // test.cpp : 定义控制台应用程序的入口点。
 //
 
-#include "stdafx.h"
-
+//#include "stdafx.h"
+#include "../header.hpp"
 
 #define BOOST_TEST_MAIN
 #include <boost/test/included/unit_test.hpp>
@@ -10,15 +10,15 @@
 #define BOSST_TEST_INCLUDED
 #include <boost/test/unit_test.hpp>
 
-#include "../engineIoParser.hpp"
+#include "../EngineIoParser.hpp"
 using namespace boost;
-using namespace engineIoParser;
+using namespace EngineIoParser;
 BOOST_AUTO_TEST_SUITE(t_engineIo)
 
 BOOST_AUTO_TEST_CASE(t_engineIo_parse)
 {
 	std::string str("123");
-	std::string packet = encodePacket(open, str);
+	std::string packet=encodePacket(open, str);
 	BOOST_CHECK_EQUAL(packet, "0123");
 	std::string payload = encodePayloadAsBinary(packet);
 	std::string data("___0123");

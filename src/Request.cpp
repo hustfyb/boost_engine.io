@@ -1,8 +1,6 @@
 #include "header.hpp"
 #include "Request.hpp"
 #include "util.hpp"
-using namespace std;
-
 
 Request::Request()
 {
@@ -60,6 +58,7 @@ int Request::on_header_field(http_parser* parse, const char *at, size_t length)
 
 int Request::on_header_value(http_parser* parse, const char *at, size_t length)
 {
+	using namespace std;
 	Request *request = (Request*)parse->data;
 	string value(at, length);
 	request->header_.insert(pair<string, string>(request->m_head, value));

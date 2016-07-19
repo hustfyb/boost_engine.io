@@ -1,6 +1,6 @@
 #pragma once
 #include "header.hpp"
-namespace engineIoParser
+namespace EngineIoParser
 {
 	typedef enum
 	{
@@ -11,12 +11,18 @@ namespace engineIoParser
 		, message
 		, upgrade
 		, noop
-	}EngineIoState;
+	}EngineIoType;
 
-	typedef shared_ptr<property_tree::ptree> PackagePtr;
+	typedef struct 
+	{
+		int type;
+		std::string  data;
+	}Package;
+	typedef shared_ptr<Package> PackagePtr;
 	typedef std::vector<PackagePtr> PackageVector;
-	std::string encodePacket(EngineIoState type, std::string &data);
-	std::string encodePayloadAsBinary(std::string data);
+	std::string encodePacket(EngineIoType type, std::string &data);
+	std::string encodePayloadAsBinary(std::string &data);
+	PackagePtr decodePacket(std::string &msg, bool binaryType);
 	shared_ptr<PackageVector> decodePayload(std::string &data, bool binary=false);
 };
 

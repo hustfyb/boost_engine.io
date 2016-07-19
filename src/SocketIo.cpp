@@ -6,7 +6,7 @@
 #include "TranserBase.hpp"
 using namespace xpressive;
 namespace SocketIo {
-	unordered_map<std::string, shared_ptr<session_t> > session_map;
+	unordered_map<std::string, shared_ptr<EngineIoClient> > session_map;
 
 	static char *transport_url_reg = "^/[^/]*/\\d{1}/([^/]*)/([^?|#]*).*?(i=(\\d+))?$";
 	static char *transport_message_reg = "(\\d):(\\d+\\+?)?:(/[^:]*)?:?(.*)?";
@@ -22,7 +22,7 @@ namespace SocketIo {
 	{
 //		char uuidBuff[36];
 		uuid_t uuid;
-		shared_ptr<session_t> session =make_shared<session_t>();
+		shared_ptr<EngineIoClient> session =make_shared<EngineIoClient>();
 		session->sid = uuid.toString();
 // 		session->queue = NULL;
 // 		session->client = NULL;
