@@ -2,27 +2,29 @@
 #include "header.hpp"
 #include "Server.hpp"
 #include "FilterBase.hpp"
-#include "EngineSocket.hpp"
-
-typedef struct {
-	std::string sid;
-	shared_ptr<EngineSocket> socket;
-	int state; /* -2:disconnected; -1:disconnecting; 0:connecting; 1:connected; */
-			   //	ev_timer close_timeout;
-
-} EngineIoClient;
 
 class EngineIo: public FilterBase
 {
 public:
-	EngineIo();
+	typedef enum
+	{
+		open = 0
+		, close    // non-ws
+		, ping
+		, pong
+		, message
+		, upgrade
+		, noop
+	}EngineIoType;
+
+	EngineIo(asio::io_service& );
 	void sendErrorMessage(RequestPtr request, ResponsePtr response, int code);
 	int verify(Request &, Response &);
 	virtual void process(RequestPtr, ResponsePtr);
 
 //configValue
-	int pingInterval;
-	int pingTimeout;
+	int pingInterval_;
+	int pingTimeout_;
 
 	typedef enum 
 	{
@@ -40,5 +42,6 @@ public:
 	};
 private:
 	void handleHandShake(RequestPtr request, ResponsePtr response);
+	asio::io_service &ios_;
 };
 

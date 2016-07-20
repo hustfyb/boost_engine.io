@@ -87,7 +87,6 @@
     <ClCompile Include="mime_types.cpp">
       <Filter>httpServer</Filter>
     </ClCompile>
-    <ClCompile Include="SocketIOServer.cpp" />
     <ClCompile Include="header.cpp" />
     <ClCompile Include="uuid_t.cpp">
       <Filter>util</Filter>
@@ -109,5 +108,6 @@
     </ClCompile>
     <ClCompile Include="EngineIoParser.cpp" />
     <ClCompile Include="EngineSocket.cpp" />
+    <ClCompile Include="EngineIOServer.cpp" />
   </ItemGroup>
 </Project>

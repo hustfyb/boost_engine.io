@@ -7,7 +7,7 @@ using namespace xpressive;
 //#include "request.hpp"
 //#include "Response.hpp"
 
-Server::Server(boost::asio::io_service& io_service) : ios(io_service)
+Server::Server(asio::io_service& io_service) : ios(io_service)
 {
 	tcp::resolver resolver(io_service);
 	tcp::resolver::query query(g_setting.getAddress(), g_setting.getPort());

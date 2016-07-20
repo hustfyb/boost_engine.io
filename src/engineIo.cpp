@@ -2,15 +2,17 @@
 #include "engineIo.hpp"
 #include "EngineIoParser.hpp"
 #include "PollTranser.hpp"
+#include "EngineSocket.hpp"
 using namespace EngineIoParser;
 #include <boost/unordered_map.hpp>
 unordered_map<std::string, shared_ptr<EngineSocket>> socketStore;
 #define isExist(T,K) T.find(K)!=T.end()
 #define mapGet(T,K,D) isExist(T,K)?T[K]:D
-EngineIo::EngineIo()
+
+EngineIo::EngineIo(asio::io_service& ios) : ios_(ios)
 {
-	pingTimeout = 60000;
-	pingInterval = 25000;
+	pingTimeout_ = 60000;
+	pingInterval_ = 25000;
 	//upgradeTimeout : 10000,
 }
 
@@ -63,7 +65,7 @@ void EngineIo::process(RequestPtr request, ResponsePtr response)
 	response->setCross(request);
 	if (checkCode == Errors::ERROR_OK) {
 		if (request->query_.find("sid") != request->query_.end()) {
-			//socketStore[request.query_["sid"]]->transport->onRequest(request,response,cb);
+			socketStore[request->query_["sid"]]->onRequest(request,response);
 		}
 		else
 		{
@@ -84,35 +86,9 @@ void EngineIo::handleHandShake(RequestPtr request, ResponsePtr response)
 // 
 // 	}
  	uuid_t uid;
- 	shared_ptr<EngineSocket> engineSocket = boost::make_shared<EngineSocket>(uid.toString(),transport,request,response);
+ 	shared_ptr<EngineSocket> engineSocket = boost::make_shared<EngineSocket>(uid.toString(), this,transport,request,response,ios_);
  	socketStore[engineSocket->id_] = engineSocket;
- 
-// 	property_tree::ptree pt_root;
-// 	pt_root.put("sid", session->sid);
-// 	pt_root.put("pingInterval", this->pingInterval);
-// 	pt_root.put("pingTimeout", this->pingTimeout);
-// 	property_tree::ptree upgrade;
-// 	property_tree::ptree method;
-// 	method.put("","");
-// 	upgrade.push_back(std::make_pair("", method));
-// 	pt_root.add_child("upgrades",upgrade);
-// 	std::stringstream ss;
-// 	boost::property_tree::write_json(ss, pt_root,false);
-// 	std::string s = ss.str();
-// 	std::string payload = encodePayloadAsBinary(encodePacket(open, s));
-// 
-// 
-// 	response.setHeader(std::string("Content-Type"), std::string("application/octet-stream"));
-// 	response.sendData(payload,cb);
-//	LOG(info) << "handshake " << ss.str();
+	engineSocket->onOpen();
 	return ;
 }
 
-// engineIo::engineIo()
-// {
-// }
-// 
-// 
-// engineIo::~engineIo()
-// {
-// }

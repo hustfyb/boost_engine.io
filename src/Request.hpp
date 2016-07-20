@@ -2,8 +2,6 @@
 #include "header.hpp"
 #include "../submodules/http-parser/http_parser.h"
 #include "uuid_t.hpp"
-#include "TranserBase.hpp"
-
 enum SESSION_STATE {
 	DISCONNECTED_STATE = -2,
 	DISCONNECTING_STATE = -1,

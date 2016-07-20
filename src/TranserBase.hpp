@@ -1,7 +1,8 @@
 #pragma once
 #include "ObjectFactory.h"
-class Request;
-class Response;
+#include "Request.hpp"
+#include "Response.hpp"
+class EngineSocket;
 class TranserBase
 {
 public:
@@ -12,7 +13,11 @@ public:
 	static std::vector<std::string> &getTranserNames();
 	static std::vector<std::string> names;
 	std::string name_;
-	virtual void onRequest(Request& request, Response& response)=0;
+	virtual void onRequest(RequestPtr request, ResponsePtr response)=0;
+	void setSocket(EngineSocket*engineSocket) {
+		engineSocket_ = engineSocket;
+	};
+	EngineSocket *engineSocket_;
 	std::string id_;
 };
 typedef TranserBase Transer;
