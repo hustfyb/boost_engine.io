@@ -78,7 +78,6 @@ void EngineIo::process(RequestPtr request, ResponsePtr response)
 	}
 }
 
-template <typename EngineHandler>
 void EngineIo::handleHandShake(RequestPtr request, ResponsePtr response)
 {
 	LOG(debug)<<"xxxxxx";
@@ -90,7 +89,7 @@ void EngineIo::handleHandShake(RequestPtr request, ResponsePtr response)
 // 
 // 	}
  	uuid_t uid;
- 	shared_ptr<EngineSocket> engineSocket = boost::make_shared<EngineSocket<EngineHandler>>(uid.toString(), this,transport,request,response,ios_);
+ 	shared_ptr<EngineSocket> engineSocket = boost::make_shared<EngineSocket>(uid.toString(), this,transport,request,response,ios_);
  	socketStore[engineSocket->id_] = engineSocket;
 	engineSocket->onOpen();
 	return ;

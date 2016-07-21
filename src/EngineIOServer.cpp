@@ -6,6 +6,7 @@
 #include "Setting.hpp"
 #include "EngineIo.hpp"
 #include "EngineIoHandler.h"
+#include "EngineSocket.hpp"
 void logInit()
 {
 	log::core::get()->set_filter
@@ -14,10 +15,26 @@ void logInit()
 	);
 }
 
-template <typename Handler>
-shared_ptr<Handler> *createHandler()
+class SimpleHandler:public EngineIoHandler
 {
-	return make_shared<Handler>();
+public:
+	void onConnect(EngineSocket* socket)
+	{
+		LOG(info) << "connect socket " << socket->id_;
+	}
+	void onMessage(EngineSocket* socket,std::string &data)
+	{
+		LOG(info) << "message " << data;
+	}
+	void onClose(EngineSocket* socket)
+	{
+		LOG(info) << "connect close";
+	}
+};
+
+shared_ptr<EngineIoHandler> createEngineSocketHandler()
+{
+	return static_pointer_cast<EngineIoHandler>(make_shared<SimpleHandler>());
 }
 
 int main()
@@ -26,7 +43,6 @@ int main()
  	asio::io_service io_service;
  	shared_ptr<Server> httpServer=make_shared<Server>(io_service); 
 	EngineIo engineIo(io_service);
-	engineIo.bindHandler(createHandler<EngineIoHandler>);
 	httpServer->addFilter(".*/engine.io/.*", engineIo);
  	httpServer->startListen(system::error_code());
 	io_service.run();

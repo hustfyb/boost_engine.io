@@ -47,9 +47,8 @@ void EngineSocket::onPacket(EngineIoParser::PacketPtr paPtr)
  		case EngineIoParser::error:
  		 	this->onClose("parse error");
  		 	break;
-//	 	case message:
-//			this.emit('data', packet.data);
-//			this.emit('message', packet.data);
+		case EngineIoParser::message:
+			handler_->onMessage(this, paPtr->data);
 		 	break;
 		}
 	}
@@ -100,6 +99,7 @@ void EngineSocket::onOpen()
 
 	transport_->sendPacket(EngineIoParser::open, util::ptToJsonStr(pt_root));
  	this->setPingTimeout();
+	handler_->onConnect(this);
 }
 
 void EngineSocket::onClose(char *reason)
@@ -110,6 +110,8 @@ void EngineSocket::onClose(char *reason)
  		this->readyState_ = closed;
 		timer_.cancel();
 // 		this.clearTransport();
+		handler_->onClose(this);
 		engineIo_->removeSocket(this->id_);
+
  	}
-}*/
+}

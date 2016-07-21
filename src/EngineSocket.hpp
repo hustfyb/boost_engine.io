@@ -3,6 +3,8 @@
 #include "EngineIo.hpp"
 #include "EngineIoParser.hpp"
 #include "TranserBase.hpp"
+#include "EngineIoHandler.h"
+extern shared_ptr<EngineIoHandler> createEngineSocketHandler();
 class EngineSocket:public enable_shared_from_this<EngineSocket>
 {
 	typedef enum 
@@ -31,5 +33,6 @@ private:
 	EngineIo* engineIo_;
 	shared_ptr<TranserBase> transport_;
 	void pingTimeout(const boost::system::error_code& error);
+	shared_ptr<EngineIoHandler> handler_;
 };
 
