@@ -26,7 +26,7 @@ public:
 	Response(asio::ip::tcp::socket &sock) :socket_(sock) {
 		status = Response::ok;
 	};
-	~Response() { }
+	~Response() {}
 	/// The status of the reply.
 	enum status_type
 	{
@@ -62,7 +62,7 @@ public:
 	void send(status_type status);
 	void sendData(std::string &data);
 	void sendData(const char *data);
-	void sendHead(boost::function<void(boost::system::error_code, std::size_t)> cb);
+	void sendHead(boost::function<void(system::error_code, std::size_t)> cb);
 	void sendDataContinue(char *data, int dataSize, function<void(system::error_code, std::size_t)> cb);
 	void sendFile(std::string &docRoot, std::string &url, function<void(system::error_code, std::size_t)> cb);
 	void setHeader(std::string &name, std::string &value);
@@ -71,6 +71,7 @@ public:
 	void setCross(RequestPtr request);
 	void end(Callback cb);
 	void clear();
+	void defaultHandler(system::error_code);
 private:
 	char buff[4096];
 	/// ¶Ô¶ËµÄsocket;

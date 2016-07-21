@@ -48,12 +48,14 @@ void Connection::run(system::error_code ec, std::size_t length)
 				} while (indeterminate(parseResult));
 				if (parseResult == true)
 				{
-					if (!server.processFilter(request_,response_))
+					LOG(debug) << request_->url;
+					if (!server.processFilter(request_, response_))
 					{
 						response_->sendFile(g_setting.getRoot(), request_->url, CallFromThis(&Connection::run));
 					}
 					yield response_->end(CallFromThis(&Connection::run));
-					response_->clear();
+					request_ = make_shared<Request>();
+					response_ = make_shared<Response>(m_socket);
 				}
 			}
 		}

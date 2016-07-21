@@ -150,6 +150,7 @@
     <ClInclude Include="..\submodules\http-parser\http_parser.h" />
     <ClInclude Include="Connection.hpp" />
     <ClInclude Include="EngineIo.hpp" />
+    <ClInclude Include="EngineIoHandler.h" />
     <ClInclude Include="EngineIoParser.hpp" />
     <ClInclude Include="EngineSocket.hpp" />
     <ClInclude Include="FilterBase.hpp" />
@@ -172,6 +173,7 @@
     </ClCompile>
     <ClCompile Include="Connection.cpp" />
     <ClCompile Include="EngineIo.cpp" />
+    <ClCompile Include="EngineIoHandler.cpp" />
     <ClCompile Include="EngineIoParser.cpp" />
     <ClCompile Include="EngineSocket.cpp" />
     <ClCompile Include="header.cpp">

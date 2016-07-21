@@ -385,6 +385,9 @@ void Response::setCross(RequestPtr request)
 
 void Response::end(Callback cb)
 {
+	if (cb == NULL) {
+		cb = bind(&Response::defaultHandler, this, asio::placeholders::error);
+	}
 	if (!content.empty()) {
 		if (headers.find("Content-Length") == headers.end()) {
 			headers["Content-Length"] = boost::lexical_cast<std::string>(content.size());
@@ -404,5 +407,9 @@ void Response::clear()
 {
 	headers.clear();
 	content.clear();
+}
+
+void Response::defaultHandler(system::error_code)
+{
 }
 

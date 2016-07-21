@@ -18,7 +18,7 @@ public:
 	std::string id_;
 	ReadyState readyState_;
 	void onRequest(RequestPtr request, ResponsePtr response) const;
-	void onPacket(EngineIoParser::PackagePtr paPtr);
+	void onPacket(EngineIoParser::PacketPtr paPtr);
 	void setPingTimeout();
 	void onOpen();
 	void onClose(char *);
@@ -30,7 +30,6 @@ private:
 	ResponsePtr response_;
 	EngineIo* engineIo_;
 	shared_ptr<TranserBase> transport_;
-	void sendPacket(EngineIoParser::EngineIoType type, std::string &data);
 	void pingTimeout(const boost::system::error_code& error);
 };
 

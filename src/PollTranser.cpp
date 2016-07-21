@@ -14,6 +14,12 @@ PollTranser::~PollTranser()
 {
 }
 
+void PollTranser::init(RequestPtr request, ResponsePtr response)
+{
+	dataReq_ = request;
+	dataRes_ = response;
+}
+
 void PollTranser::onRequest(RequestPtr req, ResponsePtr res)
 {
 	if (HTTP_GET == req->method_) {
@@ -27,21 +33,33 @@ void PollTranser::onRequest(RequestPtr req, ResponsePtr res)
 	}
 }
 
+void PollTranser::sendPacket(int type, std::string &data)
+{
+	std::string payload = EngineIoParser::encodePayloadAsBinary(EngineIoParser::encodePacket(type,data));
+	dataRes_->setHeader(std::string("Content-Type"), std::string("application/octet-stream"));
+	dataRes_->setCross(dataReq_);
+	dataRes_->sendData(payload);
+	dataRes_->end(NULL);
+	LOG(info) << dataRes_ <<":"<< data;
+}
+
 void PollTranser::onPollRequest(RequestPtr req, ResponsePtr res)
 {
-	//transback = res;
-	throw std::exception("The method or operation is not implemented.");
+	dataReq_ = req;
+	dataRes_ = res;
+	LOG(debug) << "save " << req->url << ":" << dataRes_;
 }
 
 void PollTranser::onDataRequest(RequestPtr req, ResponsePtr res)
 {
 	LOG(debug) << "data " << req->body_;
-	shared_ptr<EngineIoParser::PackageVector> paVec=EngineIoParser::decodePayload(req->body_);
-	foreach (EngineIoParser::PackagePtr paPtr,*paVec)
+	shared_ptr<EngineIoParser::PacketVector> paVec=EngineIoParser::decodePayload(req->body_);
+	foreach (EngineIoParser::PacketPtr paPtr,*paVec)
 	{
 		engineSocket_->onPacket(paPtr);
 	}
 	res->setHeader("Content-Type", "text/html"); 
+	res->setCross(req);
 	res->setStatus(Response::ok);
 	res->sendData(std::string("ok"));
 }

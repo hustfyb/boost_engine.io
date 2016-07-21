@@ -2,13 +2,12 @@
 #include "EngineIoParser.hpp"
 
 namespace EngineIoParser {
-	std::string encodePacket(EngineIoType type, std::string &data)
+	std::string encodePacket(int type, std::string &data)
 	{
 		std::string result = lexical_cast<std::string>(type) + data;
 		return result;
 	}
-
-	std::string encodePacket(Package &data)
+	std::string encodePacket(Packet &data)
 	{
 		std::string result = lexical_cast<std::string>(data.type) + data.data;
 		return result;
@@ -32,51 +31,45 @@ namespace EngineIoParser {
 		return result;
 	}
 
-	shared_ptr<PackageVector> decodePayload(std::string &data, bool binary/*=false*/)
+	shared_ptr<PacketVector> decodePayload(std::string &data, bool binary/*=false*/)
 	{
-		//var err = { type: 'error', data : 'parser error' };
-		shared_ptr<PackageVector> paVectorPtr = make_shared<PackageVector>();
+		Packet err = { EngineIoParser::error, "parser error" };
+		shared_ptr<PacketVector> paVectorPtr = make_shared<PacketVector>();
 		int pos = 0;
 		int start = 0;
+		pos = data.find_first_of(':', start + 1);
 		while (pos >= 0)
 		{
-			pos = data.find_first_of(':', start + 1);
-			if (pos >= 0)
-			{
-				int msgLength;
-				try
-				{
-					msgLength = lexical_cast<int>(data.substr(start, pos - start));
-					std::string msg = data.substr(pos + 1, msgLength);
-					PackagePtr paPtr = decodePacket(msg,false);
-					if (paPtr == NULL)
-					{
-						break;
-					}
-					else
-					{
-						paVectorPtr->push_back(paPtr);
-					}
-					start = pos + 1 + msgLength;
-				}
-				catch (const std::exception&)
-				{
-					LOG(error) << "payload length error";
-					return NULL;
-				}
 
-			}
-			else
+			int msgLength;
+			try
 			{
-				LOG(error) << "parse payload error";
+				msgLength = lexical_cast<int>(data.substr(start, pos - start));
+				std::string msg = data.substr(pos + 1, msgLength);
+				PacketPtr paPtr = decodePacket(msg, false);
+				if (paPtr == NULL)
+				{
+					break;
+				}
+				else
+				{
+					paVectorPtr->push_back(paPtr);
+				}
+				start = pos + 1 + msgLength;
+			}
+			catch (const std::exception&)
+			{
+				LOG(error) << "payload length error";
 				return NULL;
 			}
+			pos = data.find_first_of(':', start + 1);
 		}
+		return paVectorPtr;
 	}
 
-	PackagePtr decodePacket(std::string &msg, bool binaryType)
+	PacketPtr decodePacket(std::string &msg, bool binaryType)
 	{
-		PackagePtr paPtr = make_shared<Package>();
+		PacketPtr paPtr = make_shared<Packet>();
 		if (!binaryType)
 		{
 			if (msg[0] == 'b')

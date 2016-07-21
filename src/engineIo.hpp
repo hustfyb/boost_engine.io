@@ -2,7 +2,6 @@
 #include "header.hpp"
 #include "Server.hpp"
 #include "FilterBase.hpp"
-
 class EngineIo: public FilterBase
 {
 public:
@@ -21,7 +20,7 @@ public:
 	void sendErrorMessage(RequestPtr request, ResponsePtr response, int code);
 	int verify(Request &, Response &);
 	virtual void process(RequestPtr, ResponsePtr);
-
+	void bindHandler();
 //configValue
 	int pingInterval_;
 	int pingTimeout_;
@@ -43,5 +42,7 @@ public:
 private:
 	void handleHandShake(RequestPtr request, ResponsePtr response);
 	asio::io_service &ios_;
+public:
+	void removeSocket(std::string &id);
 };
 

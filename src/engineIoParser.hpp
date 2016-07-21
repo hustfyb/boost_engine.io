@@ -11,18 +11,20 @@ namespace EngineIoParser
 		, message
 		, upgrade
 		, noop
+		, error
 	}EngineIoType;
 
 	typedef struct 
 	{
 		int type;
 		std::string  data;
-	}Package;
-	typedef shared_ptr<Package> PackagePtr;
-	typedef std::vector<PackagePtr> PackageVector;
-	std::string encodePacket(EngineIoType type, std::string &data);
+	}Packet;
+	typedef shared_ptr<Packet> PacketPtr;
+	typedef std::vector<PacketPtr> PacketVector;
+	std::string encodePacket(Packet &pa);
+	std::string encodePacket(int type, std::string &data);
 	std::string encodePayloadAsBinary(std::string &data);
-	PackagePtr decodePacket(std::string &msg, bool binaryType);
-	shared_ptr<PackageVector> decodePayload(std::string &data, bool binary=false);
+	PacketPtr decodePacket(std::string &msg, bool binaryType);
+	shared_ptr<PacketVector> decodePayload(std::string &data, bool binary=false);
 };
 

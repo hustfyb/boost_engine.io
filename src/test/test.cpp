@@ -17,8 +17,8 @@ BOOST_AUTO_TEST_SUITE(t_engineIo)
 
 BOOST_AUTO_TEST_CASE(t_engineIo_parse)
 {
-	std::string str("123");
-	std::string packet=encodePacket(open, str);
+	Packet pa ={ open,"123" };
+	std::string packet=encodePacket(pa);
 	BOOST_CHECK_EQUAL(packet, "0123");
 	std::string payload = encodePayloadAsBinary(packet);
 	std::string data("___0123");

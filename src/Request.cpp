@@ -21,6 +21,7 @@ Request::Request()
 
 Request::~Request()
 {
+	LOG(debug) <<this->url <<"~~~~~~~~~~~~~~";
 }
 
 tribool Request::parse(char *data,std::size_t dSize)
@@ -80,6 +81,13 @@ int Request::on_body(http_parser* parse, const char *at, size_t length)
 int Request::on_message_complete(http_parser*)
 {
 	return 0;
+}
+
+void Request::clear() 
+{
+	this->header_.clear();
+	this->query_.clear();
+	this->body_.clear();
 }
 
 bool Request::upgrade()

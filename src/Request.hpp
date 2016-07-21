@@ -22,9 +22,6 @@ public:
 	tribool parse(char *,std::size_t);
 	std::string url;
 	std::map<std::string, std::string> header_;
-	std::string sessionid;
-	std::map<std::string, std::string> session_;
-	std::string transport;
 	std::map<std::string, std::string> query_;
 	std::string body_;
 	unsigned int method_;
@@ -47,6 +44,7 @@ public:
 
 	State m_state;
 	std::string m_head;
+	void clear();
 };
 
 typedef shared_ptr<Request> RequestPtr;

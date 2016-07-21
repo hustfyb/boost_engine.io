@@ -2,6 +2,7 @@
 #include "ObjectFactory.h"
 #include "Request.hpp"
 #include "Response.hpp"
+#include "EngineIoParser.hpp"
 class EngineSocket;
 class TranserBase
 {
@@ -13,7 +14,14 @@ public:
 	static std::vector<std::string> &getTranserNames();
 	static std::vector<std::string> names;
 	std::string name_;
+	virtual void init(RequestPtr request, ResponsePtr response) = 0;
 	virtual void onRequest(RequestPtr request, ResponsePtr response)=0;
+	virtual void sendPacket(int type, std::string &data) = 0;
+
+
+	virtual void sendPacket(EngineIoParser::Packet &pa) {
+		sendPacket(pa.type, pa.data);
+	};
 	void setSocket(EngineSocket*engineSocket) {
 		engineSocket_ = engineSocket;
 	};

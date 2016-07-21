@@ -8,12 +8,15 @@ class PollTranser :public TranserBase
 public:
 	PollTranser();
 	~PollTranser();
-	Response *transback;
+	ResponsePtr dataRes_;
+	RequestPtr dataReq_;
+	virtual void init(RequestPtr request, ResponsePtr response);
 	virtual	void onRequest(RequestPtr request, ResponsePtr response);
+	virtual void sendPacket(int type, std::string &data);
 
+private:
 	void onPollRequest(RequestPtr req, ResponsePtr res);
 	void onDataRequest(RequestPtr req, ResponsePtr res);
-private:
-	void onPacket(EngineIoParser::Package &);
+	void onPacket(EngineIoParser::Packet &);
 };
 

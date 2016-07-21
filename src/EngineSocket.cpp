@@ -20,6 +20,7 @@ EngineSocket::EngineSocket(std::string &id, EngineIo* engineIo, shared_ptr<Trans
 
 EngineSocket::~EngineSocket()
 {
+	LOG(info) << "!!!!";
 }
 
 void EngineSocket::onRequest(RequestPtr request, ResponsePtr response) const
@@ -27,7 +28,7 @@ void EngineSocket::onRequest(RequestPtr request, ResponsePtr response) const
 	transport_->onRequest(request, response);
 }
 
-void EngineSocket::onPacket(EngineIoParser::PackagePtr paPtr)
+void EngineSocket::onPacket(EngineIoParser::PacketPtr paPtr)
 {
 	if (EngineSocket::open == this->readyState_) 
 	{
@@ -41,11 +42,11 @@ void EngineSocket::onPacket(EngineIoParser::PackagePtr paPtr)
 		{
 		case EngineIoParser::ping:
 			LOG(debug)<<"got ping";
-			this->sendPacket(EngineIoParser::pong,std::string(""));
+			transport_->sendPacket(EngineIoParser::pong,std::string(""));
 			break;
-// 		case 'error':
-// 		 	this.onClose('parse error');
-// 		 	break;
+ 		case EngineIoParser::error:
+ 		 	this->onClose("parse error");
+ 		 	break;
 //	 	case message:
 //			this.emit('data', packet.data);
 //			this.emit('message', packet.data);
@@ -85,25 +86,20 @@ void EngineSocket::onOpen()
 	pt_root.put("pingInterval", engineIo_->pingInterval_);
 	pt_root.put("pingTimeout", engineIo_->pingTimeout_);
 	property_tree::ptree upgrade;
-	foreach (std::string name, TranserBase::getTranserNames())
-	{
-		property_tree::ptree method;
-		method.put("",name);
-		upgrade.push_back(std::make_pair("", method));
-	}
+	property_tree::ptree method;
+	method.put("", "");
+	upgrade.push_back(std::make_pair("", method));
+
+// 	foreach (std::string name, TranserBase::getTranserNames())
+// 	{
+// 		property_tree::ptree method;
+// 		method.put("",name);
+// 		upgrade.push_back(std::make_pair("", method));
+// 	}
 	pt_root.add_child("upgrades",upgrade);
 
-	sendPacket(EngineIoParser::open, util::ptToJsonStr(pt_root));
+	transport_->sendPacket(EngineIoParser::open, util::ptToJsonStr(pt_root));
  	this->setPingTimeout();
-}
-
-void EngineSocket::sendPacket(EngineIoParser::EngineIoType type, std::string &data)
-{
-	std::string payload = EngineIoParser::encodePayloadAsBinary(encodePacket(type, data));
-	response_->setHeader(std::string("Content-Type"), std::string("application/octet-stream"));
-	response_->sendData(payload);
-
-	LOG(info) << "handshake " << data;
 }
 
 void EngineSocket::onClose(char *reason)
@@ -114,5 +110,6 @@ void EngineSocket::onClose(char *reason)
  		this->readyState_ = closed;
 		timer_.cancel();
 // 		this.clearTransport();
+		engineIo_->removeSocket(this->id_);
  	}
-}
+}*/

@@ -70,6 +70,7 @@
     <ClInclude Include="Connection.hpp">
       <Filter>httpServer</Filter>
     </ClInclude>
+    <ClInclude Include="EngineIoHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -109,5 +110,6 @@
     <ClCompile Include="EngineIoParser.cpp" />
     <ClCompile Include="EngineSocket.cpp" />
     <ClCompile Include="EngineIOServer.cpp" />
+    <ClCompile Include="EngineIoHandler.cpp" />
   </ItemGroup>
 </Project>
