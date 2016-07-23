@@ -4,3 +4,6 @@
 [submodule "rapidjson"]
 	path = rapidjson
 	url = https://github.com/TencentOpen/rapidjson.git
+[submodule "submodules/c-websocket"]
+	path = submodules/c-websocket
+	url = https://github.com/OrionExplorer/c-websocket.git
