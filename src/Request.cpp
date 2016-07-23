@@ -21,7 +21,6 @@ Request::Request()
 
 Request::~Request()
 {
-	LOG(debug) <<this->url <<"~~~~~~~~~~~~~~";
 }
 
 tribool Request::parse(char *data,std::size_t dSize)

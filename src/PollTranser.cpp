@@ -40,7 +40,7 @@ void PollTranser::sendPacket(int type, std::string &data)
 	dataRes_->setCross(dataReq_);
 	dataRes_->sendData(payload);
 	dataRes_->end(NULL);
-	LOG(info) << dataRes_ <<":"<< data;
+	LOG(debug) << data;
 }
 
 void PollTranser::onPollRequest(RequestPtr req, ResponsePtr res)

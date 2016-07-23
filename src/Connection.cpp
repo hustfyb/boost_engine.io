@@ -3,7 +3,7 @@
 #include "Server.hpp"
 #include "Setting.hpp"
 #include <boost/xpressive/xpressive.hpp>
-
+#include "util.hpp"
 #define CallFromThis(x) bind(x, shared_from_this(), _1, _2) 
 using namespace xpressive;
 
@@ -19,7 +19,6 @@ Connection::Connection(Server &serv)
 
 Connection::~Connection()
 {
-	LOG(info) << "Connection down" << request_->url;
 }
 
 
@@ -49,21 +48,27 @@ void Connection::run(system::error_code ec, std::size_t length)
 				if (parseResult == true)
 				{
 					LOG(debug) << request_->url;
-					if (!server.processFilter(request_, response_))
+					if ((MapGet(request_->header_, "Connection", ""))!= "Upgrade")
 					{
-						response_->sendFile(g_setting.getRoot(), request_->url, CallFromThis(&Connection::run));
+						if (!server.processFilter(request_, response_))
+						{
+							response_->sendFile(g_setting.getRoot(), request_->url, CallFromThis(&Connection::run));
+						}
+						yield response_->end(CallFromThis(&Connection::run));
 					}
-					yield response_->end(CallFromThis(&Connection::run));
+					else
+					{
+
+					}
 					request_ = make_shared<Request>();
 					response_ = make_shared<Response>(m_socket);
 				}
 			}
 		}
 		else {
-			logf << ec;
+			LOG(debug) << ec;
 		}
 		m_socket.shutdown(tcp::socket::shutdown_both, ec);
-		logf << "client down\r\n";
 	}
 }
 
