@@ -15,8 +15,53 @@ using namespace boost;
 using namespace EngineIoParser;
 BOOST_AUTO_TEST_SUITE(t_engineIo)
 
+class base
+{
+public:
+	base();
+	~base();
+
+private:
+
+};
+
+base::base()
+{
+}
+
+base::~base()
+{
+	std::cout << __FUNCTION__ << std::endl;
+}
+class  test
+{
+public:
+	 test();
+	~ test();
+	shared_ptr<base> base_;
+private:
+
+};
+
+ test:: test()
+{
+	base_ = make_shared<base>();
+}
+
+ test::~ test()
+{
+	std::cout << __FUNCTION__ << std::endl;
+}
 BOOST_AUTO_TEST_CASE(t_engineIo_parse)
 {
+	shared_ptr<base> bb;
+	{
+		shared_ptr<test> t = make_shared<test>();
+		bb = t->base_;
+		std::cout << "test count " << t.use_count()<<std::endl;
+		std::cout << "base count " << t->base_.use_count() << std::endl;
+	}
+
 	Packet pa ={ open,"123" };
 	std::string packet=encodePacket(pa);
 	BOOST_CHECK_EQUAL(packet, "0123");

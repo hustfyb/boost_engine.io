@@ -23,6 +23,9 @@
     <Filter Include="filter">
       <UniqueIdentifier>{3b602946-0eb2-48cc-99cc-d8d2ad1a9bc4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="util\c-websocket">
+      <UniqueIdentifier>{cbe43bf4-5604-4f80-ab2c-225d972aa618}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -71,6 +74,16 @@
       <Filter>httpServer</Filter>
     </ClInclude>
     <ClInclude Include="EngineIoHandler.h" />
+    <ClInclude Include="..\submodules\c-websocket\include\cWebSockets.h">
+      <Filter>util\c-websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\submodules\c-websocket\include\sha1.h">
+      <Filter>util\c-websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\submodules\c-websocket\include\base64.h">
+      <Filter>util\c-websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="WebSocket.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -110,5 +123,15 @@
     <ClCompile Include="EngineIoParser.cpp" />
     <ClCompile Include="EngineSocket.cpp" />
     <ClCompile Include="EngineIoServer.cpp" />
+    <ClCompile Include="..\submodules\c-websocket\base64.c">
+      <Filter>util\c-websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\submodules\c-websocket\cWebSockets.c">
+      <Filter>util\c-websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\submodules\c-websocket\sha1.c">
+      <Filter>util\c-websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="WebSocket.cpp" />
   </ItemGroup>
 </Project>

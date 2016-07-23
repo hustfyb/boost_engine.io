@@ -15,7 +15,7 @@ public:
 	explicit Connection(Server &);
 	~Connection();
 	void run(system::error_code ec, std::size_t length);
-	tcp::socket m_socket;
+	shared_ptr<tcp::socket>		socket_;
 	//void recvData(system::error_code ec, std::size_t length);
 private:
 	asio::io_service &ios;

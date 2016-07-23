@@ -149,6 +149,9 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\submodules\c-websocket\include\base64.h" />
+    <ClInclude Include="..\submodules\c-websocket\include\cWebSockets.h" />
+    <ClInclude Include="..\submodules\c-websocket\include\sha1.h" />
     <ClInclude Include="..\submodules\http-parser\http_parser.h" />
     <ClInclude Include="Connection.hpp" />
     <ClInclude Include="EngineIo.hpp" />
@@ -167,9 +170,22 @@
     <ClInclude Include="TranserBase.hpp" />
     <ClInclude Include="util.hpp" />
     <ClInclude Include="uuid_t.hpp" />
+    <ClInclude Include="WebSocket.h" />
     <ClInclude Include="WebsocketTranser.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\submodules\c-websocket\base64.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\submodules\c-websocket\cWebSockets.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\submodules\c-websocket\sha1.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
     <ClCompile Include="..\submodules\http-parser\http_parser.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -198,6 +214,7 @@
     <ClCompile Include="TranserBase.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="uuid_t.cpp" />
+    <ClCompile Include="WebSocket.cpp" />
     <ClCompile Include="WebsocketTranser.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

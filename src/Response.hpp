@@ -23,7 +23,8 @@ class Response :boost::asio::coroutine
 	, public boost::enable_shared_from_this<Response>
 {
 public:
-	Response(asio::ip::tcp::socket &sock) :socket_(sock) {
+	Response(shared_ptr<tcp::socket> sock) {
+		socket_ = sock;
 		status = Response::ok;
 	};
 	~Response() {}
@@ -75,7 +76,7 @@ public:
 private:
 	char buff[4096];
 	/// ¶Ô¶ËµÄsocket;
-	asio::ip::tcp::socket &socket_;
+	shared_ptr<tcp::socket> socket_;
 	bool url_decode(const std::string& in, std::string& out);
 };
 

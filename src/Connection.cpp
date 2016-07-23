@@ -10,10 +10,10 @@ using namespace xpressive;
 Connection::Connection(Server &serv)
 	:server(serv)
 	,ios(serv.get_io_service())
-	,m_socket(serv.get_io_service())
 {
+	socket_ = make_shared<tcp::socket>(serv.get_io_service());
 	request_ = make_shared<Request>();
-	response_ = make_shared<Response>(m_socket);
+	response_ = make_shared<Response>(socket_);
 }
 
 
@@ -39,7 +39,7 @@ void Connection::run(system::error_code ec, std::size_t length)
 			while (!exit)
 			{
 				do {
-					yield m_socket.async_read_some(boost::asio::buffer(*buffer_), CallFromThis(&Connection::run));
+					yield socket_->async_read_some(boost::asio::buffer(*buffer_), CallFromThis(&Connection::run));
 					if (length == 0) {
 						exit = true;
 						break;
@@ -55,15 +55,13 @@ void Connection::run(system::error_code ec, std::size_t length)
 					}
 					yield response_->end(CallFromThis(&Connection::run));
 					request_ = make_shared<Request>();
-					response_ = make_shared<Response>(m_socket);
+					response_ = make_shared<Response>(socket_);
 				}
 			}
 		}
 		else {
 			logf << ec;
 		}
-		m_socket.shutdown(tcp::socket::shutdown_both, ec);
-		logf << "client down\r\n";
 	}
 }
 

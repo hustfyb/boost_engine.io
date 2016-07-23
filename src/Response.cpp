@@ -251,14 +251,14 @@ void Response::sendData(std::string &data)
 
 void Response::sendHead(boost::function<void(boost::system::error_code, std::size_t)> cb)
 {
-	socket_.async_send(this->to_buffers(), cb);
+	socket_->async_send(this->to_buffers(), cb);
 }
 
 void Response::sendDataContinue(char *data, int dataSize, function<void(system::error_code, std::size_t)> cb)
 {
 	content.clear();
 	content.append(data, dataSize);
-	asio::async_write(socket_, asio::buffer(content), cb);
+	asio::async_write(*socket_, asio::buffer(content), cb);
 }
 
 bool Response::url_decode(const std::string& in, std::string& out)
@@ -395,7 +395,7 @@ void Response::end(Callback cb)
 		if (headers.find("Content-Type") == headers.end()) {
 			headers["Content-Type"] = "text/html";
 		}
-		asio::async_write(socket_, this->to_buffers(), cb);
+		asio::async_write(*socket_, this->to_buffers(), cb);
 	}
 	else
 	{
