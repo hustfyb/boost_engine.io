@@ -31,7 +31,7 @@ namespace status_strings {
 	const std::string moved_temporarily =
 		"HTTP/1.1 302 Moved Temporarily\r\n";
 	const std::string not_modified =
-		"HTTP/1.1 304 Not Modified\r\n";
+		"HTTP/1.1 304 Not Modified\r\ 8n";
 	const std::string bad_request =
 		"HTTP/1.1 400 Bad Request\r\n";
 	const std::string unauthorized =

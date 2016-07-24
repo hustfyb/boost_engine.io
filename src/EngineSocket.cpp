@@ -20,7 +20,6 @@ EngineSocket::EngineSocket(std::string &id, EngineIo* engineIo, shared_ptr<Trans
 
 EngineSocket::~EngineSocket()
 {
-	LOG(info) << "!!!!";
 }
 
 void EngineSocket::onRequest(RequestPtr request, ResponsePtr response) const
@@ -32,7 +31,7 @@ void EngineSocket::onPacket(EngineIoParser::PacketPtr paPtr)
 {
 	if (EngineSocket::open == this->readyState_) 
 	{
-		LOG(info) << "packet";
+		LOG(debug) << "packet";
 
 		// Reset ping timeout on any packet, incoming data is a good sign of
 		// other side's liveness
@@ -54,7 +53,7 @@ void EngineSocket::onPacket(EngineIoParser::PacketPtr paPtr)
 	}
 	else 
 	{
-		LOG(debug)<<"packet received with closed socket";
+		LOG(warning)<<"packet received with closed socket";
  	}
 }
 
@@ -86,19 +85,24 @@ void EngineSocket::onOpen()
 	pt_root.put("pingTimeout", engineIo_->pingTimeout_);
 	property_tree::ptree upgrade;
 	property_tree::ptree method;
-	method.put("", "");
-	upgrade.push_back(std::make_pair("", method));
-
-// 	foreach (std::string name, TranserBase::getTranserNames())
-// 	{
-// 		property_tree::ptree method;
-// 		method.put("",name);
-// 		upgrade.push_back(std::make_pair("", method));
-// 	}
+	foreach(std::string name, TranserBase::getTranserNames())
+ 	{
+		if (name != "polling") 
+		{
+			method.put("", name);
+			upgrade.push_back(std::make_pair("", method));
+		}
+ 	}
+	if (upgrade.size() == 0)
+	{
+		method.put("", "");
+		upgrade.push_back(std::make_pair("", method));
+	}
 	pt_root.add_child("upgrades",upgrade);
 
 	transport_->sendPacket(EngineIoParser::open, util::ptToJsonStr(pt_root));
  	this->setPingTimeout();
+	handler_ = createEngineSocketHandler();
 	handler_->onConnect(this);
 }
 

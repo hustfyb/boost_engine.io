@@ -14,17 +14,20 @@
     <Filter Include="util\http-parser">
       <UniqueIdentifier>{9efcbe8e-6748-4401-ad51-0c95dcafd8be}</UniqueIdentifier>
     </Filter>
-    <Filter Include="transers">
-      <UniqueIdentifier>{46449cf6-4ea5-4660-8862-fb4f4ce8f323}</UniqueIdentifier>
-    </Filter>
     <Filter Include="util\objectFactory">
       <UniqueIdentifier>{34a5fb3a-cae1-4f8a-a549-abc44132afbd}</UniqueIdentifier>
     </Filter>
     <Filter Include="filter">
       <UniqueIdentifier>{3b602946-0eb2-48cc-99cc-d8d2ad1a9bc4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="util\c-websocket">
-      <UniqueIdentifier>{cbe43bf4-5604-4f80-ab2c-225d972aa618}</UniqueIdentifier>
+    <Filter Include="EngineIo">
+      <UniqueIdentifier>{e569fa9e-6d3c-46ac-ba87-9c8270a7eb75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineIo\transers">
+      <UniqueIdentifier>{46449cf6-4ea5-4660-8862-fb4f4ce8f323}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="util\CWebSocket">
+      <UniqueIdentifier>{f78c4a0e-ed41-44fe-b1a3-e6686bfb575b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -54,36 +57,46 @@
     <ClInclude Include="ObjectFactory.h">
       <Filter>util\objectFactory</Filter>
     </ClInclude>
-    <ClInclude Include="util.hpp" />
-    <ClInclude Include="EngineIo.hpp" />
     <ClInclude Include="FilterBase.hpp">
       <Filter>filter</Filter>
     </ClInclude>
     <ClInclude Include="PollTranser.hpp">
-      <Filter>transers</Filter>
+      <Filter>EngineIo\transers</Filter>
     </ClInclude>
     <ClInclude Include="TranserBase.hpp">
-      <Filter>transers</Filter>
+      <Filter>EngineIo\transers</Filter>
     </ClInclude>
-    <ClInclude Include="EngineIoParser.hpp" />
-    <ClInclude Include="EngineSocket.hpp" />
     <ClInclude Include="WebsocketTranser.hpp">
-      <Filter>transers</Filter>
+      <Filter>EngineIo\transers</Filter>
     </ClInclude>
     <ClInclude Include="Connection.hpp">
       <Filter>httpServer</Filter>
     </ClInclude>
-    <ClInclude Include="EngineIoHandler.h" />
-    <ClInclude Include="..\submodules\c-websocket\include\cWebSockets.h">
-      <Filter>util\c-websocket</Filter>
+    <ClInclude Include="util.hpp">
+      <Filter>util</Filter>
     </ClInclude>
-    <ClInclude Include="..\submodules\c-websocket\include\sha1.h">
-      <Filter>util\c-websocket</Filter>
+    <ClInclude Include="EngineIo.hpp">
+      <Filter>EngineIo</Filter>
     </ClInclude>
-    <ClInclude Include="..\submodules\c-websocket\include\base64.h">
-      <Filter>util\c-websocket</Filter>
+    <ClInclude Include="EngineIoHandler.h">
+      <Filter>EngineIo</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineIoParser.hpp">
+      <Filter>EngineIo</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineSocket.hpp">
+      <Filter>EngineIo</Filter>
     </ClInclude>
     <ClInclude Include="WebSocket.h" />
+    <ClInclude Include="..\submodules\c-websocket\include\base64.h">
+      <Filter>util\CWebSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\submodules\c-websocket\include\cWebSockets.h">
+      <Filter>util\CWebSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\submodules\c-websocket\include\sha1.h">
+      <Filter>util\CWebSocket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -110,28 +123,36 @@
       <Filter>httpServer</Filter>
     </ClCompile>
     <ClCompile Include="WebsocketTranser.cpp">
-      <Filter>transers</Filter>
+      <Filter>EngineIo\transers</Filter>
     </ClCompile>
-    <ClCompile Include="util.cpp" />
-    <ClCompile Include="EngineIo.cpp" />
     <ClCompile Include="PollTranser.cpp">
-      <Filter>transers</Filter>
+      <Filter>EngineIo\transers</Filter>
     </ClCompile>
     <ClCompile Include="TranserBase.cpp">
-      <Filter>transers</Filter>
+      <Filter>EngineIo\transers</Filter>
     </ClCompile>
-    <ClCompile Include="EngineIoParser.cpp" />
-    <ClCompile Include="EngineSocket.cpp" />
+    <ClCompile Include="util.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineIo.cpp">
+      <Filter>EngineIo</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineIoParser.cpp">
+      <Filter>EngineIo</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineSocket.cpp">
+      <Filter>EngineIo</Filter>
+    </ClCompile>
     <ClCompile Include="EngineIoServer.cpp" />
-    <ClCompile Include="..\submodules\c-websocket\base64.c">
-      <Filter>util\c-websocket</Filter>
-    </ClCompile>
+    <ClCompile Include="WebSocket.cpp" />
     <ClCompile Include="..\submodules\c-websocket\cWebSockets.c">
-      <Filter>util\c-websocket</Filter>
+      <Filter>util\CWebSocket</Filter>
     </ClCompile>
     <ClCompile Include="..\submodules\c-websocket\sha1.c">
-      <Filter>util\c-websocket</Filter>
+      <Filter>util\CWebSocket</Filter>
     </ClCompile>
-    <ClCompile Include="WebSocket.cpp" />
+    <ClCompile Include="..\submodules\c-websocket\base64.c">
+      <Filter>util\CWebSocket</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -5,6 +5,7 @@
 #include "../submodules/http-parser/http_parser.h"
 #include "Server.hpp"
 #include "FilterBase.hpp"
+#include "WebSocket.h"
 typedef std::map<std::string, FilterBase *> FilterMap;
 class Server;
 
@@ -22,7 +23,8 @@ private:
 	typedef array<char, 8192> ArrayBuffer;
 	shared_ptr<ArrayBuffer> buffer_;
 	Server			&server;
-	shared_ptr<Request>			request_;
-	shared_ptr<Response>		response_;
+	RequestPtr			request_;
+	ResponsePtr			response_;
+	WebSocketPtr		ws_;
 };
 

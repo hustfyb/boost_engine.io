@@ -5,14 +5,13 @@
 #include "EngineSocket.hpp"
 using namespace EngineIoParser;
 #include <boost/unordered_map.hpp>
+#include "util.hpp"
 unordered_map<std::string, shared_ptr<EngineSocket>> socketStore;
-#define isExist(T,K) T.find(K)!=T.end()
-#define mapGet(T,K,D) isExist(T,K)?T[K]:D
 
 EngineIo::EngineIo(asio::io_service& ios) : ios_(ios)
 {
-	pingTimeout_ = 6000;
-	pingInterval_ = 5000;
+	pingTimeout_ = 60000;
+	pingInterval_ = 25000;
 	//upgradeTimeout : 10000,
 }
 
@@ -80,8 +79,7 @@ void EngineIo::process(RequestPtr request, ResponsePtr response)
 
 void EngineIo::handleHandShake(RequestPtr request, ResponsePtr response)
 {
-	LOG(debug)<<"xxxxxx";
-	std::string transportName=mapGet(request->query_,"transport","polling");
+	std::string transportName=MapGet(request->query_,"transport","polling");
 	
 	shared_ptr<TranserBase> transport(TranserBase::CreateTranserByName(transportName));
 	transport->init(request, response);

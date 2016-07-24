@@ -24,6 +24,7 @@ public:
 	std::map<std::string, std::string> header_;
 	std::map<std::string, std::string> query_;
 	std::string body_;
+	std::string data_;
 	unsigned int method_;
 private:
 	http_parser_settings m_httpSetting;

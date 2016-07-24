@@ -3,6 +3,7 @@
 #include "Server.hpp"
 #include "Setting.hpp"
 #include <boost/xpressive/xpressive.hpp>
+#include "util.hpp"
 
 #define CallFromThis(x) bind(x, shared_from_this(), _1, _2) 
 using namespace xpressive;
@@ -15,6 +16,7 @@ Connection::Connection(Server &serv)
 	request_ = make_shared<Request>();
 	response_ = make_shared<Response>(socket_);
 }
+
 
 
 Connection::~Connection()
@@ -44,16 +46,25 @@ void Connection::run(system::error_code ec, std::size_t length)
 						exit = true;
 						break;
 					}
+					request_->data_ += buffer_->data();
 					parseResult = request_->parse(buffer_->data(), length);
 				} while (indeterminate(parseResult));
 				if (parseResult == true)
 				{
 					LOG(debug) << request_->url;
-					if (!server.processFilter(request_, response_))
+					if ((MapGet(request_->header_, "Connection", "")) != "Upgrade")
 					{
-						response_->sendFile(g_setting.getRoot(), request_->url, CallFromThis(&Connection::run));
+						if (!server.processFilter(request_, response_))
+						{
+							response_->sendFile(g_setting.getRoot(), request_->url, CallFromThis(&Connection::run));
+						}
+						yield response_->end(CallFromThis(&Connection::run));
 					}
-					yield response_->end(CallFromThis(&Connection::run));
+					else
+					{
+						ws_ = make_shared<WebSocket>();
+						yield ws_->process(request_, response_, CallFromThis(&Connection::run));
+					}
 					request_ = make_shared<Request>();
 					response_ = make_shared<Response>(socket_);
 				}

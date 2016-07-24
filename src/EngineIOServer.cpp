@@ -11,7 +11,7 @@ void logInit()
 {
 	log::core::get()->set_filter
 	(
-		log::trivial::severity >= log::trivial::trace
+		log::trivial::severity >= log::trivial::debug
 	);
 }
 
@@ -39,6 +39,7 @@ shared_ptr<EngineIoHandler> createEngineSocketHandler()
 
 int main()
 {
+	logInit();
 	g_setting.setConfig(std::string("config.json"));
  	asio::io_service io_service;
  	shared_ptr<Server> httpServer=make_shared<Server>(io_service); 
