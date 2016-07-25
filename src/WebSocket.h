@@ -3,7 +3,8 @@
 #include "Request.hpp"
 #include "Response.hpp"
 class WebSocket:
-	asio::coroutine
+	asio::coroutine,
+	public enable_shared_from_this<WebSocket>
 {
 public:
 	WebSocket();
@@ -16,5 +17,7 @@ private:
 	Callback cb_;
 	typedef array<char, 8192> ArrayBuffer;
 	shared_ptr<ArrayBuffer> buffer_;
+	shared_ptr<tcp::socket> socket_;
+	std::string data_;
 };
 typedef shared_ptr<WebSocket> WebSocketPtr;

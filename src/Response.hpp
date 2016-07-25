@@ -61,7 +61,9 @@ public:
 	std::vector<boost::asio::const_buffer> to_buffers();
 
 	void send(status_type status);
+	void rawSend(const char *data, int size, Callback cb);
 	void sendData(std::string &data);
+	shared_ptr<tcp::socket> getSocket();
 	void sendData(const char *data);
 	void sendHead(boost::function<void(system::error_code, std::size_t)> cb);
 	void sendDataContinue(char *data, int dataSize, function<void(system::error_code, std::size_t)> cb);

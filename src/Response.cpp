@@ -31,7 +31,7 @@ namespace status_strings {
 	const std::string moved_temporarily =
 		"HTTP/1.1 302 Moved Temporarily\r\n";
 	const std::string not_modified =
-		"HTTP/1.1 304 Not Modified\r\ 8n";
+		"HTTP/1.1 304 Not Modified\r\n";
 	const std::string bad_request =
 		"HTTP/1.1 400 Bad Request\r\n";
 	const std::string unauthorized =
@@ -240,10 +240,19 @@ void Response::send(status_type status)
 	setStatus(status);
 	sendData("");
 }
+
+void Response::rawSend(const char *data, int size, Callback cb) {
+	socket_->async_send(buffer(data, size), cb);
+};
+
 void Response::sendData(const char *data) {
 	sendData(std::string(data));
 };
 
+shared_ptr<tcp::socket> Response::getSocket()
+{
+	return socket_;
+}
 void Response::sendData(std::string &data)
 {
 	content += data;
