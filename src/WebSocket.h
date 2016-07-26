@@ -10,6 +10,7 @@ public:
 	WebSocket();
 	~WebSocket();
 	void process(RequestPtr req, ResponsePtr resp, Callback cb);
+	int generateHandshake(RequestPtr req, std::string &reply);
 private:
 	void doWebSocket(system::error_code ec,size_t size);
 	RequestPtr req_;
@@ -19,5 +20,6 @@ private:
 	shared_ptr<ArrayBuffer> buffer_;
 	shared_ptr<tcp::socket> socket_;
 	std::string data_;
+	std::string reply_;
 };
 typedef shared_ptr<WebSocket> WebSocketPtr;
