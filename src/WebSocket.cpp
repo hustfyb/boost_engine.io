@@ -36,6 +36,27 @@ bool Base64Decode(const std::string& input, std::string &output) {
 	return output.empty() == false;
 }
 
+#include <boost/asio/yield.hpp>
+boost::tuple<boost::tribool, int> WebsocketDataParser::parse(char *data, int length)
+{
+	int cousumeBytes = 0;
+	int left = length;
+	tribool result = indeterminate;
+
+	reenter(this)
+	{
+		if ((length - cousumeBytes) < sizeof(head))
+		{
+			yield return make_tuple(result, cousumeBytes);
+		}
+		head = *(Head*)data;
+		// 			//if(head)
+		cousumeBytes += sizeof(head);
+		left = length - cousumeBytes;
+	}
+	return make_tuple(true, cousumeBytes);
+}
+
 WebSocket::WebSocket()
 {
 }
@@ -83,13 +104,10 @@ int WebSocket::generateHandshake(RequestPtr req, std::string &reply)
 	fmt%additional_headers % sec_websocket_accept;
 	reply = fmt.str();
 	return 0;
-
 }
 
 #define CallFromThis(x) bind(&x, shared_from_this(), _1, _2) 
 
-
-#include <boost/asio/yield.hpp>
 void WebSocket::doWebSocket(system::error_code ec, size_t length)
 {
 	tribool parseResult = false;
@@ -112,8 +130,7 @@ void WebSocket::doWebSocket(system::error_code ec, size_t length)
 				} while (indeterminate(parseResult));
 				//data
 			}
-
-// 					return cb_(system::error_code(), 0);
+//			return cb_(system::error_code(), 0);
 		}
 	}
 	else
@@ -125,7 +142,9 @@ void WebSocket::doWebSocket(system::error_code ec, size_t length)
 
 boost::tribool WebSocket::getData(char *data, size_t length)
 {
-	throw std::exception("The method or operation is not implemented.");
+	tribool result; int cBytes;
+	tie(result,cBytes)=wParser_.parse(data, length);
+	return result;
 }
 
 #include <boost/asio/unyield.hpp>
