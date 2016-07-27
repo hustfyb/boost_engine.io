@@ -17,6 +17,8 @@ public:
 	Head head;
 	boost::tuple<boost::tribool, int> parse(char *data, int length);
 
+	void clear();
+	int parserStage_;
 };
 
 class WebSocket:

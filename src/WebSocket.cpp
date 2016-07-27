@@ -36,25 +36,33 @@ bool Base64Decode(const std::string& input, std::string &output) {
 	return output.empty() == false;
 }
 
-#include <boost/asio/yield.hpp>
+
 boost::tuple<boost::tribool, int> WebsocketDataParser::parse(char *data, int length)
 {
 	int cousumeBytes = 0;
 	int left = length;
 	tribool result = indeterminate;
 
-	reenter(this)
+	switch (parserStage_)
 	{
+	case 0://head
 		if ((length - cousumeBytes) < sizeof(head))
 		{
-			yield return make_tuple(result, cousumeBytes);
+			return make_tuple(result, cousumeBytes);
 		}
 		head = *(Head*)data;
 		// 			//if(head)
 		cousumeBytes += sizeof(head);
 		left = length - cousumeBytes;
+		parserStage_ = 1;
+	case 1:
 	}
 	return make_tuple(true, cousumeBytes);
+}
+
+void WebsocketDataParser::clear()
+{
+	parserStage_=0;
 }
 
 WebSocket::WebSocket()
@@ -105,12 +113,13 @@ int WebSocket::generateHandshake(RequestPtr req, std::string &reply)
 	reply = fmt.str();
 	return 0;
 }
-
+#include <boost/asio/yield.hpp>
 #define CallFromThis(x) bind(&x, shared_from_this(), _1, _2) 
 
 void WebSocket::doWebSocket(system::error_code ec, size_t length)
 {
 	tribool parseResult = false;
+	size_t consumeBytes;
 	if (!ec)
 	{
 		reenter(this)
@@ -124,9 +133,11 @@ void WebSocket::doWebSocket(system::error_code ec, size_t length)
 			//open
 			while (true)
 			{
+				wParser_.clear();
 				do {
 					yield socket_->async_read_some(buffer(*buffer_), CallFromThis(WebSocket::doWebSocket));
-					parseResult = this->getData(buffer_->data(), length);
+					yield tie(parseResult, consumeBytes) = wParser_.parse(buffer_->data(), length);
+					buffer_->
 				} while (indeterminate(parseResult));
 				//data
 			}
