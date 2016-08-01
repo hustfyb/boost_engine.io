@@ -117,9 +117,11 @@ void WebSocket::doWebSocket(system::error_code ec, size_t length)
 		{
 			//handshake
 			buffer_.reset(new ArrayBuffer);
+			data = buffer_->data();
 			if (generateHandshake(req_, reply_) != 0) {
 				return;
 			}
+			yield res_->getSocket()->async_write_some(buffer(reply_), CallFromThis(WebSocket::doWebSocket));
 
 			//open
 			while (true)

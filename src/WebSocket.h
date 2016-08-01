@@ -8,11 +8,11 @@ class WebsocketDataParser : asio::coroutine
 public:
 	typedef struct
 	{
-		char fin : 1;
-		char rsv : 3;
 		char opcode : 4;
-		char mask : 1;
+		char rsv : 3;
+		char fin : 1;
 		char pLen : 7;
+		char mask : 1;
 	}Head;
 	Head head;
 	boost::tuple<boost::tribool, int> parse(char *data, int length);
@@ -28,6 +28,7 @@ public:
 	~WebSocket();
 	void process(RequestPtr req, ResponsePtr resp, Callback cb);
 	int generateHandshake(RequestPtr req, std::string &reply);
+	char *data;
 private:
 	void doWebSocket(system::error_code ec,size_t size);
 	boost::tribool getData(char *data, size_t length);
