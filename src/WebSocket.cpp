@@ -37,24 +37,104 @@ bool Base64Decode(const std::string& input, std::string &output) {
 }
 
 #include <boost/asio/yield.hpp>
-boost::tuple<boost::tribool, int> WebsocketDataParser::parse(char *data, int length)
+boost::tuple<boost::tribool, int> WebsocketDataParser::parse(unsigned char *data, int length)
 {
-	int cousumeBytes = 0;
-	int left = length;
-	tribool result = indeterminate;
-
-	reenter(this)
-	{
-		if ((length - cousumeBytes) < sizeof(head))
-		{
-			yield return make_tuple(result, cousumeBytes);
+	unsigned int consumeBytes = 0;
+	unsigned int dataStart;
+	int i,j;
+	tribool result= indeterminate;
+	reenter(this){
+		//head 
+		if ((length - consumeBytes) < sizeof(head)) {
+			return make_tuple(tribool(indeterminate), 0);
 		}
 		head = *(Head*)data;
-		// 			//if(head)
-		cousumeBytes += sizeof(head);
-		left = length - cousumeBytes;
+		consumeBytes += sizeof(head);
+		parserStage_ = 1;
+		if (head.rsv != 0) {
+			yield return make_tuple(false, consumeBytes);
+		}
+		else {
+			yield return make_tuple(tribool(indeterminate), consumeBytes);
+		}
+		//dataLen & mask 
+		if (head.pLen < 126) {
+			dataStart = 0;
+		}
+		else if (head.pLen == 126) {
+			dataStart = 2;
+		}
+		else if (head.pLen == 127) {
+			dataStart = 8;
+		}
+		if (head.mask == 1) {
+			if ((length - consumeBytes) < dataStart + 4) {
+				return make_tuple((tribool)indeterminate, 0);
+			}
+			mask_[0] = data[dataStart];
+			mask_[1] = data[dataStart + 1];
+			mask_[2] = data[dataStart + 2];
+			mask_[3] = data[dataStart + 3];
+			dataStart += 4;
+		}
+		else {
+			//客户端必须掩码（mask）它发送到服务器的所有帧（更多详细信息请参见5.3节）
+			return make_tuple(false, 0);
+
+// 			if ((length - consumeBytes) < dataStart) {
+// 				return make_tuple((tribool)indeterminate, 0);
+// 			}
+		}
+		if (head.pLen < 126) {
+			dataLen_ = head.pLen;
+		}
+		else if (head.pLen == 126) {
+			dataLen_ = (data[0] << 8) + data[1];
+		}
+		else if (head.pLen == 127) {
+			dataLen_ = ((long long)data[0] << 56) +
+						((long long)data[1] << 48) +
+						((long long)data[2] << 40) +
+						((long long)data[3] << 32) +
+						(data[4] << 24) +
+						(data[5] << 16) +
+						(data[6] << 8) +
+						(data[7])-8;
+		}
+		consumeBytes += dataStart;
+		parserStage_ = 2;
+		yield return make_tuple((tribool)indeterminate, consumeBytes);
+		while (dataLen_>0)
+		{
+			//data
+			consumeBytes = (unsigned int)std::min((long long)length, dataLen_);
+			consumeBytes = std::min(consumeBytes, sizeof(this->msg_));
+			if (head.mask) {
+				for (i = 0, j = 0; i < dataLen_; i++, j++) {
+					this->msg_[j] = (unsigned char)data[i] ^ mask_[j % 4];
+				}
+			}
+			else {
+				memcpy(this->msg_, data, consumeBytes);
+			}
+			dataLen_ -= consumeBytes;
+			data += consumeBytes;
+			if (dataLen_ > 0) {
+				yield return make_tuple((tribool)indeterminate, consumeBytes);
+			}
+		}
+		if (dataLen_ < 0) {
+			return make_tuple(false, consumeBytes);
+		}else {
+			return make_tuple(true, consumeBytes);
+		}
 	}
-	return make_tuple(true, cousumeBytes);
+	return make_tuple(true,0);
+}
+
+void WebsocketDataParser::clear()
+{
+	parserStage_=0;
 }
 
 WebSocket::WebSocket()
@@ -105,7 +185,6 @@ int WebSocket::generateHandshake(RequestPtr req, std::string &reply)
 	reply = fmt.str();
 	return 0;
 }
-
 #define CallFromThis(x) bind(&x, shared_from_this(), _1, _2) 
 
 void WebSocket::doWebSocket(system::error_code ec, size_t length)
@@ -117,7 +196,6 @@ void WebSocket::doWebSocket(system::error_code ec, size_t length)
 		{
 			//handshake
 			buffer_.reset(new ArrayBuffer);
-			data = buffer_->data();
 			if (generateHandshake(req_, reply_) != 0) {
 				return;
 			}
@@ -126,6 +204,7 @@ void WebSocket::doWebSocket(system::error_code ec, size_t length)
 			//open
 			while (true)
 			{
+				wParser_.clear();
 				do {
 					yield socket_->async_read_some(buffer(*buffer_), CallFromThis(WebSocket::doWebSocket));
 					parseResult = this->getData(buffer_->data(), length);
@@ -142,10 +221,22 @@ void WebSocket::doWebSocket(system::error_code ec, size_t length)
 
 }
 
-boost::tribool WebSocket::getData(char *data, size_t length)
+boost::tribool WebSocket::getData(unsigned char *data, size_t length)
 {
 	tribool result; int cBytes;
-	tie(result,cBytes)=wParser_.parse(data, length);
+	do{
+		tie(result, cBytes) = wParser_.parse(data, length);
+		if(indeterminate(result))
+		{
+			length -= cBytes;
+			data += cBytes;
+// 			if (wParser_.dataParse_)
+// 			{
+// 
+// 			}
+		}
+	} while (indeterminate(result) && length > 0);
+	//if (re)
 	return result;
 }
 
