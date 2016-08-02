@@ -45,6 +45,7 @@ int main()
  	asio::io_service io_service;
  	shared_ptr<Server> httpServer=make_shared<Server>(io_service); 
 	shared_ptr<EngineIo> engineIo=make_shared<EngineIo>(io_service);
+	WebSocket::sigConnect.connect(bind(&EngineIo::wsOnConnect, engineIo, _1));
 	engineIo->attach(httpServer);
  	httpServer->startListen(system::error_code());
 	io_service.run();

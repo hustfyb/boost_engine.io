@@ -103,21 +103,12 @@ void EngineIo::removeSocket(std::string &id)
 	socketStore.erase(id);
 }
 
-void EngineIo::wsOnConnect(WebSocket*ws)
+void EngineIo::wsOnConnect(WebSocketPtr ws)
 {
 	shared_ptr<TranserBase> transport(TranserBase::CreateTranserByName("websocket"));
-	//transport->init(ws);
+	LOG(info) << ws->req_->url;
+	//ws->sigMessage.connect(bind(&TranserBase::onMessage, transport, _1, _2));
 	//ws->setHandler(ws);
-
-}
-
-void EngineIo::wsOnMessage(WebSocket*, std::string &data)
-{
-
-}
-
-void EngineIo::wsOnClose(WebSocket*) 
-{
 
 }
 

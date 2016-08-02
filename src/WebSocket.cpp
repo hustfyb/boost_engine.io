@@ -11,6 +11,7 @@
 #include <boost/archive/iterators/binary_from_base64.hpp>  
 #include <boost/archive/iterators/transform_width.hpp>  
 
+signals2::signal<void(WebSocketPtr)> WebSocket::sigConnect;
 
 bool Base64Encode(const std::string& input, std::string &output) {
 	typedef boost::archive::iterators::base64_from_binary<boost::archive::iterators::transform_width<std::string::const_iterator, 6, 8> > Base64EncodeIterator;
@@ -128,6 +129,7 @@ boost::tuple<boost::tribool, int> WebsocketDataParser::parse(unsigned char *data
 			yield return make_tuple(true, consumeBytes);
 		}
 	}
+	return make_tuple(true, 0);
 }
 
 void WebsocketDataParser::clear()

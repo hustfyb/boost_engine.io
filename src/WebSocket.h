@@ -36,14 +36,14 @@ public:
 	void process(RequestPtr req, ResponsePtr resp, Callback cb);
 	int generateHandshake(RequestPtr req, std::string &reply);
 	char *data;
-	signals2::signal<void(WebSocketPtr)> sigConnect;
+	static signals2::signal<void(WebSocketPtr)> sigConnect;
 	signals2::signal<void(WebSocketPtr)> sigMessage;
 	signals2::signal<void(WebSocketPtr)> sigClose;
+	RequestPtr req_;
+	ResponsePtr res_;
 private:
 	void doWebSocket(system::error_code ec,size_t size);
 	boost::tribool getData(unsigned char *data, size_t length);
-	RequestPtr req_;
-	ResponsePtr res_;
 	Callback cb_;
 	typedef array<unsigned char, 8192> ArrayBuffer;
 	shared_ptr<ArrayBuffer> buffer_;

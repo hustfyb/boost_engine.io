@@ -16,9 +16,7 @@ public:
 	void attach(shared_ptr<Server> httpServer);
 public:
 	void removeSocket(std::string &id);
-	virtual void wsOnConnect(WebSocket*);
-	virtual void wsOnMessage(WebSocket*, std::string &data) ;
-	virtual void wsOnClose(WebSocket*);
+	void wsOnConnect(WebSocketPtr);
 private:
 	char *errorMessages[4] = {
 		"Transport unknown",
