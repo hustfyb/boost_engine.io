@@ -93,8 +93,31 @@ void EngineIo::handleHandShake(RequestPtr request, ResponsePtr response)
 	return ;
 }
 
+void EngineIo::attach(shared_ptr<Server> httpServer)
+{
+	httpServer->addFilter(".*/engine.io/.*", shared_from_this());
+}
+
 void EngineIo::removeSocket(std::string &id)
 {
 	socketStore.erase(id);
+}
+
+void EngineIo::wsOnConnect(WebSocket*ws)
+{
+	shared_ptr<TranserBase> transport(TranserBase::CreateTranserByName("websocket"));
+	//transport->init(ws);
+	//ws->setHandler(ws);
+
+}
+
+void EngineIo::wsOnMessage(WebSocket*, std::string &data)
+{
+
+}
+
+void EngineIo::wsOnClose(WebSocket*) 
+{
+
 }
 

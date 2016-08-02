@@ -11,6 +11,7 @@
 #include <boost/archive/iterators/binary_from_base64.hpp>  
 #include <boost/archive/iterators/transform_width.hpp>  
 
+
 bool Base64Encode(const std::string& input, std::string &output) {
 	typedef boost::archive::iterators::base64_from_binary<boost::archive::iterators::transform_width<std::string::const_iterator, 6, 8> > Base64EncodeIterator;
 	std::stringstream result;
@@ -43,14 +44,14 @@ boost::tuple<boost::tribool, int> WebsocketDataParser::parse(unsigned char *data
 	unsigned int dataStart;
 	int i,j;
 	tribool result= indeterminate;
-	reenter(this){
+	reenter(this) for(;;)
+	{
 		//head 
 		if ((length - consumeBytes) < sizeof(head)) {
 			return make_tuple(tribool(indeterminate), 0);
 		}
 		head = *(Head*)data;
 		consumeBytes += sizeof(head);
-		parserStage_ = 1;
 		if (head.rsv != 0) {
 			yield return make_tuple(false, consumeBytes);
 		}
@@ -80,10 +81,6 @@ boost::tuple<boost::tribool, int> WebsocketDataParser::parse(unsigned char *data
 		else {
 			//客户端必须掩码（mask）它发送到服务器的所有帧（更多详细信息请参见5.3节）
 			return make_tuple(false, 0);
-
-// 			if ((length - consumeBytes) < dataStart) {
-// 				return make_tuple((tribool)indeterminate, 0);
-// 			}
 		}
 		if (head.pLen < 126) {
 			dataLen_ = head.pLen;
@@ -102,20 +99,21 @@ boost::tuple<boost::tribool, int> WebsocketDataParser::parse(unsigned char *data
 						(data[7])-8;
 		}
 		consumeBytes += dataStart;
-		parserStage_ = 2;
+		headDone_ = true;
 		yield return make_tuple((tribool)indeterminate, consumeBytes);
 		while (dataLen_>0)
 		{
 			//data
 			consumeBytes = (unsigned int)std::min((long long)length, dataLen_);
-			consumeBytes = std::min(consumeBytes, sizeof(this->msg_));
+			dataStart = data_.size();
+			data_.resize(dataStart + consumeBytes);
 			if (head.mask) {
 				for (i = 0, j = 0; i < dataLen_; i++, j++) {
-					this->msg_[j] = (unsigned char)data[i] ^ mask_[j % 4];
+					data_[j] = (unsigned char)data[i] ^ mask_[j % 4];
 				}
 			}
 			else {
-				memcpy(this->msg_, data, consumeBytes);
+				memcpy((void *)(data_.c_str() + dataStart), data, consumeBytes);
 			}
 			dataLen_ -= consumeBytes;
 			data += consumeBytes;
@@ -124,17 +122,19 @@ boost::tuple<boost::tribool, int> WebsocketDataParser::parse(unsigned char *data
 			}
 		}
 		if (dataLen_ < 0) {
-			return make_tuple(false, consumeBytes);
-		}else {
-			return make_tuple(true, consumeBytes);
+			yield return make_tuple(false, consumeBytes);
+		}
+		else {
+			yield return make_tuple(true, consumeBytes);
 		}
 	}
-	return make_tuple(true,0);
 }
 
 void WebsocketDataParser::clear()
 {
-	parserStage_=0;
+	memset(&head, 0, sizeof(head));
+	data_.clear();
+	headDone_ = false;
 }
 
 WebSocket::WebSocket()
@@ -190,6 +190,7 @@ int WebSocket::generateHandshake(RequestPtr req, std::string &reply)
 void WebSocket::doWebSocket(system::error_code ec, size_t length)
 {
 	tribool parseResult = false;
+	bool exit = false;
 	if (!ec)
 	{
 		reenter(this)
@@ -200,18 +201,17 @@ void WebSocket::doWebSocket(system::error_code ec, size_t length)
 				return;
 			}
 			yield res_->getSocket()->async_write_some(buffer(reply_), CallFromThis(WebSocket::doWebSocket));
+			sigConnect(shared_from_this());
 
 			//open
-			while (true)
+			while (!exit)
 			{
-				wParser_.clear();
-				do {
-					yield socket_->async_read_some(buffer(*buffer_), CallFromThis(WebSocket::doWebSocket));
-					parseResult = this->getData(buffer_->data(), length);
-				} while (indeterminate(parseResult));
-				//data
+				yield socket_->async_read_some(buffer(*buffer_), CallFromThis(WebSocket::doWebSocket));
+				if (this->getData(buffer_->data(), length))
+				{
+					exit=processData();
+				}
 			}
-//			return cb_(system::error_code(), 0);
 		}
 	}
 	else
@@ -230,14 +230,37 @@ boost::tribool WebSocket::getData(unsigned char *data, size_t length)
 		{
 			length -= cBytes;
 			data += cBytes;
-// 			if (wParser_.dataParse_)
-// 			{
-// 
-// 			}
 		}
-	} while (indeterminate(result) && length > 0);
-	//if (re)
+	} while (indeterminate(result) && cBytes != 0 && length > 0 );
 	return result;
 }
+
+bool WebSocket::processData()
+{
+	short reason;
+	bool exit = false;
+	switch (wParser_.head.opcode)
+	{
+	case 0x08://close
+		reason = *((short*)wParser_.data_.c_str());
+		LOG(info) << "close for " << reason;
+		sigClose(shared_from_this());
+		exit = true;
+		break;
+	case 0x09://ping
+		sendPong();
+		break;
+	default:
+		sigMessage(shared_from_this());
+		break;
+	}
+	return exit;
+}
+
+void WebSocket::sendPong()
+{
+	throw std::logic_error("The method or operation is not implemented.");
+}
+
 
 #include <boost/asio/unyield.hpp>

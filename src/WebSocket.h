@@ -18,13 +18,14 @@ public:
 	boost::tuple<boost::tribool, int> parse(unsigned char *data, int length);
 
 	void clear();
-	int parserStage_;
+	int headDone_;
 	int dataStart;
 	char mask_[4];
 	long long dataLen_;
-	char msg_[64 * 1024];
+	std::string data_;
 };
-
+class WebSocket;
+typedef shared_ptr<WebSocket> WebSocketPtr;
 class WebSocket:
 	asio::coroutine,
 	public enable_shared_from_this<WebSocket>
@@ -35,6 +36,9 @@ public:
 	void process(RequestPtr req, ResponsePtr resp, Callback cb);
 	int generateHandshake(RequestPtr req, std::string &reply);
 	char *data;
+	signals2::signal<void(WebSocketPtr)> sigConnect;
+	signals2::signal<void(WebSocketPtr)> sigMessage;
+	signals2::signal<void(WebSocketPtr)> sigClose;
 private:
 	void doWebSocket(system::error_code ec,size_t size);
 	boost::tribool getData(unsigned char *data, size_t length);
@@ -47,5 +51,6 @@ private:
 	std::string data_;
 	std::string reply_;
 	WebsocketDataParser wParser_;
+	bool processData();
+	void sendPong();
 };
-typedef shared_ptr<WebSocket> WebSocketPtr;

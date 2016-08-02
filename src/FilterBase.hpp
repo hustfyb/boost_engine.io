@@ -9,3 +9,4 @@ private:
 
 };
 
+typedef shared_ptr<FilterBase> FilterBasePtr;

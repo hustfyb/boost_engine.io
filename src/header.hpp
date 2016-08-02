@@ -30,7 +30,8 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/tuple/tuple.hpp>
-
+#include <boost/functional/factory.hpp>
+#include <boost/unordered_map.hpp>
 ////////////////////LOG //////////////////////////////////////////////////
 #include <boost/log/trivial.hpp>
 #include <boost/log/core.hpp>

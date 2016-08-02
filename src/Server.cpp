@@ -42,9 +42,9 @@ void Server::startListen(system::error_code ec)
 	}
 }
 
-void Server::addFilter(char *match, FilterBase &filter)
+void Server::addFilter(char *match, FilterBasePtr filter)
 {
-	filterMap[std::string(match)] = &filter;
+	filterMap[std::string(match)]=filter;
 }
 
 bool Server::processFilter(shared_ptr<Request> req,shared_ptr<Response> res)
@@ -61,7 +61,7 @@ bool Server::processFilter(shared_ptr<Request> req,shared_ptr<Response> res)
 		filter_iter++;
 	}
 	return filterMatch;
-
 }
+
 #include <boost/asio/unyield.hpp>
 

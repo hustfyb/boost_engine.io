@@ -52,18 +52,18 @@ void Connection::run(system::error_code ec, std::size_t length)
 				if (parseResult == true)
 				{
 					LOG(debug) << request_->url;
-					if ((MapGet(request_->header_, "Connection", "")) != "Upgrade")
+					if ((MapGet(request_->header_, "Connection", "")) == "Upgrade")
+					{	//WebSocket
+						ws_ = make_shared<WebSocket>();
+						yield ws_->process(request_, response_, CallFromThis(&Connection::run));
+					}
+					else
 					{
 						if (!server.processFilter(request_, response_))
 						{
 							response_->sendFile(g_setting.getRoot(), request_->url, CallFromThis(&Connection::run));
 						}
 						yield response_->end(CallFromThis(&Connection::run));
-					}
-					else
-					{
-						ws_ = make_shared<WebSocket>();
-						yield ws_->process(request_, response_, CallFromThis(&Connection::run));
 					}
 					request_ = make_shared<Request>();
 					response_ = make_shared<Response>(socket_);

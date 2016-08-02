@@ -13,7 +13,8 @@
 #include "header.hpp"
 #include "Connection.hpp"
 #include "FilterBase.hpp"
-typedef std::map<std::string, FilterBase *> FilterMap;
+#include "WebSocket.h"
+typedef std::map<std::string, FilterBasePtr > FilterMap;
 
 class Server :asio::coroutine
 {
@@ -25,7 +26,7 @@ public:
 	}
 
 	void startListen(system::error_code ec);
-	void addFilter(char *match, FilterBase &filter);
+	void addFilter(char *match, FilterBasePtr filter);
 	bool processFilter(shared_ptr<Request> req, shared_ptr<Response> res);
 private:
 	asio::io_service &ios;
@@ -33,4 +34,3 @@ private:
 	shared_ptr<Connection> m_connection;
 	FilterMap filterMap;
 };
-

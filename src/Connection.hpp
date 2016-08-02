@@ -6,7 +6,7 @@
 #include "Server.hpp"
 #include "FilterBase.hpp"
 #include "WebSocket.h"
-typedef std::map<std::string, FilterBase *> FilterMap;
+typedef std::map<std::string, shared_ptr<FilterBase> > FilterMap;
 class Server;
 
 class Connection :asio::coroutine,

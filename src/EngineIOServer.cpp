@@ -37,14 +37,15 @@ shared_ptr<EngineIoHandler> createEngineSocketHandler()
 	return static_pointer_cast<EngineIoHandler>(make_shared<SimpleHandler>());
 }
 
+
 int main()
 {
 	logInit();
 	g_setting.setConfig(std::string("config.json"));
  	asio::io_service io_service;
  	shared_ptr<Server> httpServer=make_shared<Server>(io_service); 
-	EngineIo engineIo(io_service);
-	httpServer->addFilter(".*/engine.io/.*", engineIo);
+	shared_ptr<EngineIo> engineIo=make_shared<EngineIo>(io_service);
+	engineIo->attach(httpServer);
  	httpServer->startListen(system::error_code());
 	io_service.run();
     return 0;
