@@ -1,9 +1,3 @@
 [submodule "submodules/http-parser"]
 	path = submodules/http-parser
 	url = https://github.com/nodejs/http-parser.git
-[submodule "rapidjson"]
-	path = rapidjson
-	url = https://github.com/TencentOpen/rapidjson.git
-[submodule "submodules/c-websocket"]
-	path = submodules/c-websocket
-	url = https://github.com/OrionExplorer/c-websocket.git
