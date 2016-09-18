@@ -23,6 +23,7 @@ public:
 	char mask_[4];
 	long long dataLen_;
 	std::string data_;
+	void encodeData(std::string &content, std::string & data);
 };
 class WebSocket;
 typedef shared_ptr<WebSocket> WebSocketPtr;
@@ -41,6 +42,8 @@ public:
 	signals2::signal<void(WebSocketPtr)> sigClose;
 	RequestPtr req_;
 	ResponsePtr res_;
+	WebsocketDataParser wParser_;
+	void sendData(std::string & data);
 private:
 	void doWebSocket(system::error_code ec,size_t size);
 	boost::tribool getData(unsigned char *data, size_t length);
@@ -50,7 +53,9 @@ private:
 	shared_ptr<tcp::socket> socket_;
 	std::string data_;
 	std::string reply_;
-	WebsocketDataParser wParser_;
 	bool processData();
 	void sendPong();
+	void encodeData(std::string &content, std::string &data);
+	void sendHandler(system::error_code, size_t length);
+	std::string message_;
 };

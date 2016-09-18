@@ -11,7 +11,7 @@ void logInit()
 {
 	log::core::get()->set_filter
 	(
-		log::trivial::severity >= log::trivial::debug
+		log::trivial::severity >= log::trivial::trace
 	);
 }
 
@@ -25,6 +25,7 @@ public:
 	void onMessage(EngineSocket* socket,std::string &data)
 	{
 		LOG(info) << "message " << data;
+		socket->send(data);
 	}
 	void onClose(EngineSocket* socket)
 	{
@@ -36,7 +37,6 @@ shared_ptr<EngineIoHandler> createEngineSocketHandler()
 {
 	return static_pointer_cast<EngineIoHandler>(make_shared<SimpleHandler>());
 }
-
 
 int main()
 {

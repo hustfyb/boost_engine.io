@@ -27,20 +27,20 @@ void EngineIo::sendErrorMessage(RequestPtr request, ResponsePtr response, int co
 	response->sendData(s);
 }
 
-int EngineIo::verify(Request &request, Response &response) {
+int EngineIo::verify(RequestPtr request) {
 	// transport check
-	if (request.query_.find("transport") == request.query_.end() 
-		|| !TranserBase::existTranser(request.query_["transport"])
+	if (request->query_.find("transport") == request->query_.end() 
+		|| !TranserBase::existTranser(request->query_["transport"])
 		)
 	{
 		BOOST_LOG_TRIVIAL(error) << "acceptor error ";
-		LOG(error) << "unknown transport " << request.query_["transport"];
+		LOG(error) << "unknown transport " << request->query_["transport"];
 		return Errors::UNKNOWN_TRANSPORT;
 	}
 	
 	// sid check
-	auto _sidIter = request.query_.find("sid");
-	if (_sidIter != request.query_.end())
+	auto _sidIter = request->query_.find("sid");
+	if (_sidIter != request->query_.end())
 	{
 		if (socketStore.find(_sidIter->second) == socketStore.end())
 		{
@@ -50,7 +50,7 @@ int EngineIo::verify(Request &request, Response &response) {
 	}
 	else 
 	{    // handshake is GET only
-		if (request.method_ != HTTP_GET) {
+		if (request->method_ != HTTP_GET) {
 			LOG(error) << "wrong post for handshake";
 			return Errors::BAD_HANDSHAKE_METHOD;
 		}
@@ -60,10 +60,10 @@ int EngineIo::verify(Request &request, Response &response) {
 
 void EngineIo::process(RequestPtr request, ResponsePtr response)
 {
-	int checkCode = verify(*request, *response);
+	int checkCode = verify(request);
 	//response->setCross(request);
 	if (checkCode == Errors::ERROR_OK) {
-		if (request->query_.find("sid") != request->query_.end()) {
+		if (MapIsExist(request->query_,"sid")) {
 			socketStore[request->query_["sid"]]->onRequest(request,response);
 		}
 		else
@@ -83,9 +83,6 @@ void EngineIo::handleHandShake(RequestPtr request, ResponsePtr response)
 	
 	shared_ptr<TranserBase> transport(TranserBase::CreateTranserByName(transportName));
 	transport->init(request, response);
-// 	if (transport->name_ == "polling") {
-// 
-// 	}
  	uuid_t uid;
  	shared_ptr<EngineSocket> engineSocket = boost::make_shared<EngineSocket>(uid.toString(), this,transport,request,response,ios_);
  	socketStore[engineSocket->id_] = engineSocket;
@@ -103,12 +100,25 @@ void EngineIo::removeSocket(std::string &id)
 	socketStore.erase(id);
 }
 
+#include "WebsocketTranser.hpp"
 void EngineIo::wsOnConnect(WebSocketPtr ws)
 {
-	shared_ptr<TranserBase> transport(TranserBase::CreateTranserByName("websocket"));
 	LOG(info) << ws->req_->url;
-	//ws->sigMessage.connect(bind(&TranserBase::onMessage, transport, _1, _2));
-	//ws->setHandler(ws);
+	int checkCode = verify(ws->req_);
+ 	if (checkCode == Errors::ERROR_OK) {
+		if (MapIsExist(ws->req_->query_, "sid")) {
+			shared_ptr<TranserBase> transport(TranserBase::CreateTranserByName("websocket"));
+			shared_ptr<EngineSocket> socket= socketStore[ws->req_->query_["sid"]];
+			socket->upgrade(transport);
+			(dynamic_pointer_cast<WebsocketTranser>(transport))->setHandler(ws);
+		}
+	}
+ 	else
+ 	{
+		//Ã»ÓÐÐ´£¿£¿£¿£¿
+ 	}
+
+
 
 }
 

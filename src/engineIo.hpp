@@ -7,7 +7,7 @@ class EngineIo : public FilterBase, public enable_shared_from_this<EngineIo>
 {
 public:
 	EngineIo(asio::io_service& );
-	int verify(Request &, Response &);
+	int verify(RequestPtr);
 	virtual void process(RequestPtr, ResponsePtr);
 //configValue
 	int pingInterval_;

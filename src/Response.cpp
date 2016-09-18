@@ -395,7 +395,7 @@ void Response::setCross(RequestPtr request)
 void Response::end(Callback cb)
 {
 	if (cb == NULL) {
-		cb = bind(&Response::defaultHandler, this, asio::placeholders::error);
+		cb = bind(&Response::defaultHandler, shared_from_this(), asio::placeholders::error);
 	}
 	if (!content.empty()) {
 		if (headers.find("Content-Length") == headers.end()) {

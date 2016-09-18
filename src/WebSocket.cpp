@@ -11,8 +11,8 @@
 #include <boost/archive/iterators/binary_from_base64.hpp>  
 #include <boost/archive/iterators/transform_width.hpp>  
 
+#define CallFromThis(x) bind(&x, shared_from_this(), _1, _2) 
 signals2::signal<void(WebSocketPtr)> WebSocket::sigConnect;
-
 bool Base64Encode(const std::string& input, std::string &output) {
 	typedef boost::archive::iterators::base64_from_binary<boost::archive::iterators::transform_width<std::string::const_iterator, 6, 8> > Base64EncodeIterator;
 	std::stringstream result;
@@ -102,6 +102,7 @@ boost::tuple<boost::tribool, int> WebsocketDataParser::parse(unsigned char *data
 		consumeBytes += dataStart;
 		headDone_ = true;
 		yield return make_tuple((tribool)indeterminate, consumeBytes);
+		data_.clear();
 		while (dataLen_>0)
 		{
 			//data
@@ -129,7 +130,6 @@ boost::tuple<boost::tribool, int> WebsocketDataParser::parse(unsigned char *data
 			yield return make_tuple(true, consumeBytes);
 		}
 	}
-	return make_tuple(true, 0);
 }
 
 void WebsocketDataParser::clear()
@@ -137,6 +137,43 @@ void WebsocketDataParser::clear()
 	memset(&head, 0, sizeof(head));
 	data_.clear();
 	headDone_ = false;
+}
+
+void WebsocketDataParser::encodeData(std::string &content, std::string & message)
+{
+	unsigned int dataStart;
+	unsigned int dataLen = content.size();
+	if (dataLen <= 125) {
+		dataStart = 2;
+	}else if (dataLen > 125 && dataLen <= 65535) {
+		dataStart = 4;
+	}else {
+		dataStart = 10;
+	}
+	message.resize(dataStart + dataLen);
+	message[0] = 129;
+	if(dataLen <= 125 ) {
+		message[1] = ( unsigned char )dataLen;
+	} else if(dataLen > 125 && dataLen <= 65535 ) {
+		message[1] = 126;
+		message[2] = ( unsigned char )( (dataLen >> 8 ) & 255 );
+		message[3] = ( unsigned char )( (dataLen) & 255 );
+	} else {
+		message[1] = 127;
+		message[2] = ( unsigned char )( (dataLen >> 56 ) & 255 );
+		message[3] = ( unsigned char )( (dataLen >> 48 ) & 255 );
+		message[4] = ( unsigned char )( (dataLen >> 40 ) & 255 );
+		message[5] = ( unsigned char )( (dataLen >> 32 ) & 255 );
+		message[6] = ( unsigned char )( (dataLen >> 24 ) & 255 );
+		message[7] = ( unsigned char )( (dataLen >> 16 ) & 255 );
+		message[8] = ( unsigned char )( (dataLen >> 8 ) & 255 );
+		message[9] = ( unsigned char )( (dataLen) & 255 );
+	}
+
+	unsigned int i;
+	for( i = 0; i < dataLen; i++ ) {
+		message[ dataStart + i ] = ( unsigned char )content[i];
+	}
 }
 
 WebSocket::WebSocket()
@@ -187,7 +224,7 @@ int WebSocket::generateHandshake(RequestPtr req, std::string &reply)
 	reply = fmt.str();
 	return 0;
 }
-#define CallFromThis(x) bind(&x, shared_from_this(), _1, _2) 
+
 
 void WebSocket::doWebSocket(system::error_code ec, size_t length)
 {
@@ -246,7 +283,7 @@ bool WebSocket::processData()
 	case 0x08://close
 		reason = *((short*)wParser_.data_.c_str());
 		LOG(info) << "close for " << reason;
-		sigClose(shared_from_this());
+//		sigClose(shared_from_this());
 		exit = true;
 		break;
 	case 0x09://ping
@@ -265,4 +302,15 @@ void WebSocket::sendPong()
 }
 
 
+void WebSocket::sendData(std::string & data)
+{
+	wParser_.encodeData(data, message_);
+	socket_->async_write_some(buffer(message_), CallFromThis(WebSocket::sendHandler));
+}
+
 #include <boost/asio/unyield.hpp>
+
+void WebSocket::sendHandler(system::error_code ec, size_t length)
+{
+
+}

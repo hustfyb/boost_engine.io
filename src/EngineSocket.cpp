@@ -24,7 +24,13 @@ EngineSocket::~EngineSocket()
 
 void EngineSocket::onRequest(RequestPtr request, ResponsePtr response) const
 {
-	transport_->onRequest(request, response);
+	if (upgrading_) {
+		oldTransport_->onRequest(request, response);
+	}
+	else
+	{
+		transport_->onRequest(request, response);
+	}
 }
 
 void EngineSocket::onPacket(EngineIoParser::PacketPtr paPtr)
@@ -40,8 +46,17 @@ void EngineSocket::onPacket(EngineIoParser::PacketPtr paPtr)
 		switch (paPtr->type)
 		{
 		case EngineIoParser::ping:
-			LOG(debug)<<"got ping";
-			transport_->sendPacket(EngineIoParser::pong,std::string(""));
+			LOG(debug)<<"got ping "<<paPtr->data;
+			transport_->sendPacket(EngineIoParser::pong,paPtr->data);
+			if (upgrading_) {
+				LOG(debug) << "send noop " << paPtr->data;
+				oldTransport_->sendPacket(EngineIoParser::noop,std::string(""));
+			}
+			break;
+		case EngineIoParser::upgrade:
+			LOG(debug) << "upgrade";
+			upgrading_ = false;
+			upgraded_ = true;
 			break;
  		case EngineIoParser::error:
  		 	this->onClose("parse error");
@@ -69,6 +84,27 @@ void EngineSocket::pingTimeout(const boost::system::error_code& error)
 	{
 		onClose("ping timeout");
 	}
+}
+
+void EngineSocket::upgrade(shared_ptr<TranserBase> transport)
+{
+	LOG(debug)<<"upgrade begin"<< this->transport_->name_;
+	//切换时间可以研究一下
+	upgrading_ = true;
+	if (this->transport_->name_!="websocket") {
+		this->oldTransport_ = this->transport_;
+	}
+	else {
+		LOG(debug) << "no transport";
+	}
+	this->transport_ = transport;
+	transport_->id_ = id_;
+	transport_->setSocket(this);
+}
+
+void EngineSocket::send(std::string & data)
+{
+	transport_->sendPacket(EngineIoParser::message, data);
 }
 
 void EngineSocket::onOpen()

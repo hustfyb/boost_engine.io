@@ -34,5 +34,9 @@ private:
 	shared_ptr<TranserBase> transport_;
 	void pingTimeout(const boost::system::error_code& error);
 	shared_ptr<EngineIoHandler> handler_;
+public:
+	void upgrade(shared_ptr<TranserBase> transport);
+	shared_ptr<TranserBase> oldTransport_;
+	void send(std::string & data);
 };
 

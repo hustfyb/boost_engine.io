@@ -12,6 +12,7 @@ PollTranser::PollTranser()
 
 PollTranser::~PollTranser()
 {
+	LOG(warning);
 }
 
 void PollTranser::init(RequestPtr request, ResponsePtr response)

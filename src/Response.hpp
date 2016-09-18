@@ -27,7 +27,9 @@ public:
 		socket_ = sock;
 		status = Response::ok;
 	};
-	~Response() {}
+	~Response() {
+		LOG(warning);
+	}
 	/// The status of the reply.
 	enum status_type
 	{
